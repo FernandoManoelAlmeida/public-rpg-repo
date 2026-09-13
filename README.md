@@ -29,7 +29,7 @@ Fonte canónica do PDF tipográfico Astraldark:
 
 `repos/shadowdarkrpg-fantasia/astraldark/pdf/output/Astraldark pt-BR.pdf`
 
-Após gerar o PDF (skill `astraldark-pdf`), a skill `astraldark-pdf-publicar` copia o ficheiro para `SD-RPG/`, faz commit e push neste repositório.
+Após gerar o PDF (skill `astraldark-pdf`), a skill `astraldark-pdf-publicar` **pergunta** se deve copiar para `SD-RPG/` e fazer commit+push. Só publica com confirmação. Versão e histórico: `astraldark/CHANGELOG.md` (página final do PDF).
 
 ## Onde está o resto
 

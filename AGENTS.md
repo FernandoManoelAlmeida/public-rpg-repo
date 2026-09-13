@@ -15,8 +15,10 @@ Este repo é filho do hub **TTRPG** (`repos/public-rpg-repo/`).
 ## Shadowdark / Astraldark
 
 - Fonte do PDF: `repos/shadowdarkrpg-fantasia/astraldark/pdf/output/`
-- Após render: skill `astraldark-pdf-publicar` (canónica em `repos/shadowdarkrpg-fantasia/skills/astraldark-pdf-publicar/`) — copiar para `SD-RPG/`, commit e push **neste** repo
+- Histórico tipográfico: `repos/shadowdarkrpg-fantasia/astraldark/CHANGELOG.md`
+- Após render: skill `astraldark-pdf-publicar` — **sempre perguntar** antes de copiar para `SD-RPG/`, commit e push **neste** repo
 - Não publicar versões privadas nem material com nomes WotC de mesa
+- Não publicar sem confirmação explícita do utilizador
 
 ## Outros roteamentos
 
