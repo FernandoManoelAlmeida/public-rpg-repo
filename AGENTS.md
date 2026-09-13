@@ -1,10 +1,25 @@
 # Instruções para agentes de IA
 
-Este repo é filho do hub **[TTRPG](../../README.md)** (`repos/nerogrado-rpg-repo/`).
+Este repo é filho do hub **TTRPG** (`repos/public-rpg-repo/`).
 
-- **Contexto global:** [`../../AGENTS.md`](../../AGENTS.md)
-- **Ordem Paranormal ativo:** use `repos/ordem-paranormal-desespero/` e o AGENTS dele — não duplique convenções OPRPG aqui
-- **`OP-RPG/`** é legado; preferir OPD para material Ordem Paranormal
-- **`Outros RPGs/`** (Assimilação, CoC, DnD) vive no hub: [`../../repos/Outros RPGs/`](../../repos/Outros%20RPGs/AGENTS.md)
-- **`DE-RPG/`** — material original
-- Idioma: português brasileiro; créditos a @progfernando ao reutilizar conteúdo
+- **Contexto global:** [`../../AGENTS.md`](../../AGENTS.md) (raiz do hub)
+- **README:** [`README.md`](README.md)
+
+## Pastas
+
+| Pasta | Uso |
+|-------|-----|
+| `OP-RPG/` | Campanhas/oneshots Ordem Paranormal legadas (público) |
+| `SD-RPG/` | PDFs públicos Shadowdark (Astraldark tipográfico) |
+
+## Shadowdark / Astraldark
+
+- Fonte do PDF: `repos/shadowdarkrpg-fantasia/astraldark/pdf/output/`
+- Após render: skill `astraldark-pdf-publicar` (canónica em `repos/shadowdarkrpg-fantasia/skills/astraldark-pdf-publicar/`) — copiar para `SD-RPG/`, commit e push **neste** repo
+- Não publicar versões privadas nem material com nomes WotC de mesa
+
+## Outros roteamentos
+
+- **Ordem Paranormal activo:** `repos/ordem-paranormal-desespero/` — não duplicar convenções OPRPG aqui; `OP-RPG/` é legado público
+- **Outros RPGs:** hub `repos/Outros RPGs/`
+- Idioma: português brasileiro; créditos a @progfernando / u/nerogrado ao reutilizar

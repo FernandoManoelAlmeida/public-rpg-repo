@@ -1,28 +1,43 @@
-# Campanhas e Oneshots de RPG de Mesa
+# Material público de RPG de mesa
 
 Use como bem entender, modifique, streame e se divirta, porém
-**dê créditos a mim e ao conteúdo de todos os terceiros que eu uso!**
+dê créditos a mim e ao conteúdo de todos os terceiros que eu uso!
 
-Em todas redes sociais como
-**@progfernando** ou **u/nerogrado**
+Em todas as redes sociais como
+@progfernando ou u/nerogrado
 
 ---
 
 ## Hub TTRPG
 
-Este repo faz parte do monorepo virtual **[TTRPG](../../README.md)** (quando clonado em `repos/nerogrado-rpg-repo/`). Setup de todos os filhos:
+Este repo é o clone público partilhável do monorepo virtual [TTRPG](https://github.com/FernandoManoelAlmeida/ttrpg), em `repos/public-rpg-repo/` na raiz do hub. Não é o vault Obsidian completo nem o material de mesa privado.
 
-```bash
-./scripts/bootstrap.sh
+Path local típico (hub):
+
+```text
+ttrpg/repos/public-rpg-repo/
 ```
 
 | Pasta | Conteúdo |
 |-------|----------|
-| `DE-RPG/` | Detetive Existencial e material original |
-| `OP-RPG/` | **Legado** — material Ordem Paranormal antigo |
+| `OP-RPG/` | Campanhas e oneshots Ordem Paranormal legadas (público) |
+| `SD-RPG/` | PDFs públicos Shadowdark — por agora o tipográfico Astraldark |
 
-**Outros RPGs** (Assimilação, Call of Cthulhu, DnD) foi movido para o hub: [`repos/Outros RPGs/`](../../repos/Outros%20RPGs/) — versionado no repo `ttrpg`, não neste clone.
+## SD-RPG (Shadowdark público)
 
-**Ordem Paranormal canônico:** o vault ativo e completo está em [`ordem-paranormal-desespero`](https://github.com/FernandoManoelAlmeida/ordem-paranormal-desespero) (`repos/ordem-paranormal-desespero/` no hub). Evite editar `OP-RPG/` aqui e `Campanhas/` no OPD em paralelo para o mesmo conteúdo.
+Fonte canónica do PDF tipográfico Astraldark:
 
-**Agentes de IA:** contexto global do hub em [`../../AGENTS.md`](../../AGENTS.md).
+`repos/shadowdarkrpg-fantasia/astraldark/pdf/output/Astraldark pt-BR.pdf`
+
+Após gerar o PDF (skill `astraldark-pdf`), a skill `astraldark-pdf-publicar` copia o ficheiro para `SD-RPG/`, faz commit e push neste repositório.
+
+## Onde está o resto
+
+- **Ordem Paranormal activo (vault):** [ordem-paranormal-desespero](https://github.com/FernandoManoelAlmeida/ordem-paranormal-desespero) — no hub: `repos/ordem-paranormal-desespero/`. O `OP-RPG/` daqui é legado/público; não editar em paralelo o mesmo conteúdo no OPD.
+- **Outros RPGs** (Assimilação, Call of Cthulhu, etc.): versionados no hub em `repos/Outros RPGs/`.
+- **Fantasia / Shadowdark (mesa + fontes):** [shadowdarkrpg-fantasia](https://github.com/FernandoManoelAlmeida/shadowdarkrpg-fantasia).
+
+## Agentes de IA
+
+- Este repo: [`AGENTS.md`](AGENTS.md)
+- Hub: [`AGENTS.md`](https://github.com/FernandoManoelAlmeida/ttrpg/blob/master/AGENTS.md) (quando o workspace é a raiz do hub)
