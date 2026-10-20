@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Como o hub TTRPG foi construído com skills de IA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+<style>
+  :root{ --amber:#e8b34b; --teal:#4ec9b0; --red:#e06c5a; --ink:#e8e6df; --mut:#9a978c; --card:#171c26; --line:#2c3547; }
+  .reveal{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:#0d1117; }
+  .reveal .slides section{ text-align:left; }
+  .reveal h1{ font-size:2.15em; line-height:1.08; text-transform:none; letter-spacing:-.01em; }
+  .reveal h2{ font-size:1.55em; line-height:1.15; text-transform:none; color:#fff; margin-bottom:.45em; }
+  .reveal h3{ font-size:1em; text-transform:none; color:var(--amber); margin:.2em 0 .3em; }
+  .reveal p, .reveal li{ font-size:.78em; line-height:1.45; }
+  .reveal ul{ margin-left:1em; } .reveal li{ margin:.28em 0; }
+  .reveal code{ font-family:"JetBrains Mono",Consolas,monospace; font-size:.86em; color:var(--teal); background:#131a26; padding:.05em .32em; border-radius:5px; }
+  .reveal pre{ width:100%; box-shadow:none; } .reveal pre code{ font-size:.52em; line-height:1.5; max-height:430px; color:#cfe3dc; background:#101722; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .kicker{ font-size:.5em !important; letter-spacing:.28em; text-transform:uppercase; color:var(--amber); font-weight:700; margin-bottom:.6em; }
+  .sub{ color:var(--mut); font-size:.85em !important; }
+  .big{ font-size:1.15em !important; }
+  .grid{ display:grid; gap:16px; } .g2{ grid-template-columns:1fr 1fr; } .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; }
+  .card b.t{ display:block; font-size:.85em; color:#fff; margin-bottom:.25em; }
+  .card p{ font-size:.68em; color:var(--mut); margin:0; }
+  .tight .card{ padding:12px 14px; } .tight .card b.t{ font-size:.7em; line-height:1.25; } .tight .card p{ font-size:.6em; line-height:1.35; }
+  .num{ font-size:1.9em !important; font-weight:800; color:var(--amber); line-height:1; margin:0; }
+  .num small{ font-size:.38em; color:var(--mut); font-weight:600; display:block; margin-top:.35em; letter-spacing:.04em; }
+  .flow{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:.4em 0; }
+  .step{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:.6em; line-height:1.35; flex:1; min-width:0; text-align:center; }
+  .step code{ overflow-wrap:anywhere; }
+  .step b{ display:block; color:#fff; font-size:1.08em; }
+  .arr{ align-self:center; padding:0 5px; color:var(--amber); font-weight:800; font-size:.8em; }
+  table.cmp{ width:100%; border-collapse:collapse; font-size:.62em; }
+  table.cmp th, table.cmp td{ border:1px solid var(--line); padding:9px 11px; vertical-align:top; }
+  table.cmp th{ background:#1d2637; color:#fff; text-align:left; }
+  table.cmp.small{ font-size:.5em; } table.cmp.small th, table.cmp.small td{ padding:6px 9px; }
+  .ok{ color:var(--teal); font-weight:700; } .bad{ color:var(--red); font-weight:700; }
+  .tl{ border-left:3px solid var(--line); margin-left:.3em; padding-left:1.1em; }
+  .tl li{ margin:.5em 0; } .tl b{ color:var(--amber); }
+  ul.slim li{ font-size:.66em; margin:.34em 0; line-height:1.35; }
+  .nums .card{ padding:12px 16px; } .nums .num{ font-size:1.45em !important; }
+  .closing .card{ padding:9px 14px; } .closing .num{ font-size:1.2em !important; } .closing h2{ font-size:1.15em; line-height:1.2; margin-bottom:.35em; }
+  .center{ text-align:center !important; } .center ul{ display:inline-block; text-align:left; }
+  .tag{ display:inline-block; background:#22304a; color:#bcd2ff; border-radius:20px; padding:.12em .7em; font-size:.58em; margin:.15em .1em; }
+  .foot{ position:absolute; bottom:-46px; left:0; font-size:.42em; color:#5c6270; }
+  .reveal .slide-number{ color:#5c6270; background:transparent; }
+  .quote{ border-left:4px solid var(--amber); padding-left:.8em; font-style:italic; color:#d8d4c8; font-size:.62em !important; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 -->
+<section>
+  <p class="kicker">Hub TTRPG · Skills de IA · Estudo de caso técnico</p>
+  <h1>Como o hub TTRPG foi construído com skills de IA</h1>
+  <p class="big sub">Otimizando desenvolvimento de apps e de conteúdo com skills, scripts facilitadores e memória de projeto.</p>
+  <p><span class="tag">Cursor</span><span class="tag">Claude</span><span class="tag">Gemini</span><span class="tag">Trae</span><span class="tag">Obsidian</span><span class="tag">Next.js</span></p>
+  <aside class="notes">Abertura, um minuto. Isto não é uma palestra sobre prompts: é o relato de um sistema construído para a IA trabalhar como parte do projeto, com manual versionado, ferramentas próprias e memória entre sessões. O domínio é RPG de mesa, mas o que interessa aqui é a infraestrutura que nasceu dele. São cinco atos em meia hora: problema e arquitetura, skills, scripts e moldes, casos reais e lições transferíveis. Todos os números citados foram contados nos repositórios nesta semana, com busca de arquivos e histórico do git, nada é estimativa de memória. Setas navegam e a tecla S abre estas notas. Um aviso de método: o estudo de caso é verificável, porque os arquivos citados estão no vault e nos repositórios e podem ser abertos ao vivo se alguém quiser conferir uma afirmação específica. Transição: comecemos pelo problema que esse sistema resolve.</aside>
+</section>
+
+<!-- 2 -->
+<section>
+  <p class="kicker">Ato 1 · O problema</p>
+  <h2>O problema: a IA esquecia tudo a cada sessão</h2>
+  <div class="grid g3">
+    <div class="card"><b class="t">Conteúdo disperso</b><p>Campanhas, regras, PDFs e dois webapps em repositórios separados, sem mapa comum.</p></div>
+    <div class="card"><b class="t">Tarefas repetitivas</b><p>Converter, narrar, sincronizar, migrar: trabalho manual, um repo e um comando por vez.</p></div>
+    <div class="card"><b class="t">Qualidade sem padrão</b><p>Sem molde, cada ficha, ameaça ou aventura nascia num formato.</p></div>
+  </div>
+  <aside class="notes">O gargalo nunca foi a IA saber responder. Era contexto: ela não sabia onde agir, não conhecia as convenções, não tinha ferramenta pronta e não lembrava a sessão anterior. São quatro faltas, e cada ato desta apresentação responde a uma delas. Exemplos concretos: reexplicar o formato de uma ficha, lembrar em qual dos oito repositórios está um arquivo, reconstruir de cabeça o comando certo de migração. Nenhum desses custos aparece num orçamento, mas somados eles comem a sessão de trabalho. A pergunta que guiou tudo foi: como fazer esse contexto morar no projeto, e não na cabeça de quem pede? Um custo invisível merece nome: quando o agente edita no repositório errado, o erro só aparece depois, ao sincronizar ou publicar, e o retrabalho custa mais que a tarefa original. Transição: a resposta começa pela arquitetura.</aside>
+</section>
+
+<!-- 3 -->
+<section>
+  <p class="kicker">Ato 1 · Arquitetura</p>
+  <h2>A resposta: um hub que funciona como monorepo virtual</h2>
+  <div class="flow">
+    <div class="step"><b>Obsidian na raiz</b>vault único, wikilinks entre todos os repos</div><div class="arr">→</div>
+    <div class="step"><b>repos.manifest.json</b>catálogo declarativo dos filhos</div><div class="arr">→</div>
+    <div class="step"><b>Clones gitignored</b>cada filho com git próprio</div><div class="arr">→</div>
+    <div class="step"><b>AGENTS.md raiz</b>orquestrador que roteia cada pedido</div>
+  </div>
+  <p>Quem abre a raiz, pessoa ou IA, enxerga o projeto inteiro de uma vez: o <code>bootstrap.sh</code> monta o workspace a partir do manifest, e o <code>sync_repos</code> o mantém atualizado.</p>
+  <aside class="notes">A decisão central foi não fundir tudo num repositório só, nem deixar tudo solto. O hub é uma camada fina de orquestração sobre repositórios independentes: cada filho mantém histórico e ritmo próprios, e o hub não versiona clones. O manifest é a declaração única dos filhos; bootstrap e sincronização leem dele, e os slides de cada um detalham isso adiante, sem repetir aqui. O Obsidian aberto na raiz enxerga o conjunto como um vault só, com wikilinks cruzando repositórios. Até a exceção é declarada: Outros RPGs mora no hub porque é conteúdo dele. Insistam na palavra virtual: não há um repositório gigante escondido, há repositórios normais mais uma camada de declaração e roteamento por cima, que pode ser removida sem quebrar nenhum filho. Transição: quem são os moradores desse mapa?</aside>
+</section>
+
+<!-- 4 -->
+<section>
+  <p class="kicker">Ato 1 · Ecossistema</p>
+  <h2>Mapa do ecossistema: 8 repos, papéis distintos</h2>
+  <div class="grid g4 tight">
+    <div class="card"><b class="t">ordem-paranormal-desespero</b><p>Conteúdo OPRPG: campanhas e referências.</p></div>
+    <div class="card"><b class="t">shadowdarkrpg-fantasia</b><p>Shadowdark de mesa + referências DnD.</p></div>
+    <div class="card"><b class="t">escudo-mestre-oprpg-webapp</b><p>PWA de mesa OPRPG (Next.js).</p></div>
+    <div class="card"><b class="t">escudo-mestre-shadowdarkrpg-webapp</b><p>PWA de mesa Shadowdark.</p></div>
+    <div class="card"><b class="t">bg3-fan4fun</b><p>Baldur's Gate 3 → D&amp;D 5.5, com aprovação por etapa.</p></div>
+    <div class="card"><b class="t">cyberpunk-red-necropolitik</b><p>Campanha Cyberpunk RED: NecroPolitik.</p></div>
+    <div class="card"><b class="t">public-rpg-repo</b><p>Material público: legado OP-RPG e PDFs SD-RPG.</p></div>
+    <div class="card"><b class="t">hub ttrpg</b><p>Orquestração, scripts, skills-proxy e config do Obsidian.</p></div>
+  </div>
+  <aside class="notes">Não é preciso decorar os nomes; reparem no desenho. Conteúdo e código separados, publicação separada do material ativo e dois pares vault mais app: o OPD alimenta o Escudo OPRPG e o Fantasia alimenta o Escudo Shadowdark. Esse desenho volta no Ato 4. Cada repositório tem um papel que cabe numa frase, e é isso que permite a qualquer agente saber onde uma mudança pertence antes de tocar num arquivo. O hub, no canto, não guarda conteúdo dos filhos: guarda orquestração, scripts e os apontadores de skills. Se perguntarem por que oito repositórios e não um só: cada filho pode ser clonado, publicado e versionado sozinho; o hub é conveniência de operação, não pré-requisito de existência de nenhum deles. Transição: como esse conjunto evoluiu até aqui?</aside>
+</section>
+
+<!-- 5 -->
+<section>
+  <p class="kicker">Ato 1 · Evolução e escala</p>
+  <h2>Evolução e escala (medido em 20/10/2026)</h2>
+  <ul class="tl slim">
+    <li><b>2025-04</b> — nasce o vault OPRPG</li>
+    <li><b>2025-07 → 11</b> — public-rpg-repo e Cyberpunk RED entram no conjunto</li>
+    <li><b>2026-03</b> — primeiro app: Escudo do Mestre OPRPG</li>
+    <li><b>2026-08</b> — bg3-fan4fun e, dias depois, o hub vira orquestrador</li>
+    <li><b>2026-09</b> — shadowdarkrpg-fantasia entra em produção de conteúdo</li>
+    <li><b>2026-10</b> — Escudo Shadowdark nasce e publica em dez dias</li>
+  </ul>
+  <div class="grid g4 nums">
+    <div class="card"><p class="num">51<small>skills canônicas nos repos filhos</small></p></div>
+    <div class="card"><p class="num">670<small>arquivos Markdown de conteúdo</small></p></div>
+    <div class="card"><p class="num">93<small>arquivos de teste nos dois PWAs</small></p></div>
+    <div class="card"><p class="num">2<small>PWAs publicados a partir dos vaults</small></p></div>
+  </div>
+  <aside class="notes">A leitura importante da linha do tempo não é a data, é a aceleração. O projeto mais recente é o que nasceu mais rápido e mais testado, porque herdou skills, moldes, scripts e gates dos anteriores. Essa é a tese da apresentação demonstrada pelo próprio histórico: cada camada nova reaproveita a infraestrutura das anteriores. Os quatro números da grade são os que valem guardar: skills, conteúdo, testes e produtos publicados; o restante da apresentação explica como eles se produzem mutuamente. A contagem veio de busca de arquivos e de git log em cada repositório. Metodologia em uma frase: skills contam-se pelos arquivos canônicos, conteúdo pelos Markdown fora dos modelos, testes pelos arquivos de teste dos dois apps, tudo na mesma data de medição, para os números serem repetíveis por quem quiser auditar. Transição: falta o mecanismo, e ele começa pela skill.</aside>
+</section>
+
+<!-- 6 -->
+<section>
+  <p class="kicker">Ato 2 · Skills</p>
+  <h2>O que é uma skill: procedimento versionado, carregado sob demanda</h2>
+  <pre><code>---
+name: shadowdark-ameaca
+description: >-
+  Criar ou editar ameaças Shadowdark a partir de AmeacaModelo.md
+  (ficha avulsa, verbete Bestiário, Equilibrar Encontros, blocos NV,
+  chefes). Use quando o pedido for monstro, encontro, orçamento NV
+  ou ficha de ameaça Fantasia/Shadowdark.
+---
+
+# shadowdark-ameaca
+## Quando usar cada modo …   (corpo: passos, guardrails, exemplos)</code></pre>
+  <p>A <code>description</code> é o gatilho: é ela que faz o agente escolher a skill certa sem ninguém pedir pelo nome.</p>
+  <aside class="notes">Anatomia mínima: frontmatter com nome e descrição-gatilho, corpo com procedimento. A skill é um arquivo no repositório, revisável em diff e com histórico, não um conhecimento solto num prompt de chat. Reparem na redação da descrição: ela lista os sinônimos do pedido real, monstro, encontro, orçamento, ficha, porque é escrita para casar com a linguagem de quem pede, não com o nome interno. Descrição ruim, a skill certa nunca dispara; descrição ampla demais, dispara fora de hora. E ela só é carregada quando o pedido combina: contexto sob demanda, não um prompt gigante permanente. Detalhe de ofício: o corpo da skill manda ler arquivos de referência só quando o modo escolhido exige, então exemplos longos não pesam em toda conversa, só na tarefa que realmente os usa. Transição: onde essas skills moram?</aside>
+</section>
+
+<!-- 7 -->
+<section>
+  <p class="kicker">Ato 2 · Arquitetura de skills</p>
+  <h2>Três camadas: canônica, proxy, symlink</h2>
+  <div class="flow">
+    <div class="step"><b>1 · Canônica no filho</b><code>repos/shadowdarkrpg-fantasia/skills/shadowdark-ameaca/SKILL.md</code>, mora com o conteúdo</div><div class="arr">→</div>
+    <div class="step"><b>2 · Proxy fino no hub</b><code>.cursor/skills/fantasia/&lt;slug&gt;/</code>, só aponta para a canônica</div><div class="arr">→</div>
+    <div class="step"><b>3 · Symlink flat</b><code>.cursor/skills/&lt;slug&gt;</code>, descoberta automática pelos agentes</div>
+  </div>
+  <p><b>Canônica</b> é a versão oficial e completa da skill, a única que se edita. Proxy e symlink não são cópias: só apontam para ela, e o hub expõe 60 entradas no total (proxies dos filhos + 9 skills próprias), com zero duplicação de corpo.</p>
+  <p class="quote">"Não duplicar o corpo da skill no hub: o proxy só aponta para a canónica no repo filho." — .cursor/skills/README.md</p>
+  <aside class="notes">Este é talvez o padrão mais reutilizável da apresentação. A skill vive onde o conteúdo vive: quem clona só o Fantasia tem as skills do Fantasia. O hub publica apenas um índice, com proxies agrupados por repositório e symlinks para a descoberta automática. Atualizou a canônica, todos os agentes veem a versão nova; divergência entre cópias é impossível por construção. Dois cuidados práticos: os caminhos dentro do proxy são sempre a partir da raiz do hub, e, se o caminho canônico não existir, o próprio proxy instrui a rodar o bootstrap daquele repositório. E o symlink não carrega conteúdo nenhum: se a canônica muda, não existe etapa de republicar o índice, o apontador simplesmente passa a resolver para a versão nova. Transição: a mesma ideia de fonte única vale para as instruções dos agentes.</aside>
+</section>
+
+<!-- 8 -->
+<section>
+  <p class="kicker">Ato 2 · Multi-agente</p>
+  <h2>Uma fonte, várias IAs: AGENTS.md + stubs</h2>
+  <pre><code># CLAUDE.md / GEMINI.md / TRAE.md  (em cada repo)
+@AGENTS.md</code></pre>
+  <div class="grid g3">
+    <div class="card"><b class="t">AGENTS.md</b><p>Único arquivo editável de orquestração por repo: roteamento, guardrails, catálogo de skills e comandos.</p></div>
+    <div class="card"><b class="t">Stubs de 1 linha</b><p>Cursor, Claude, Gemini e Trae leem o mesmo conteúdo pelos seus arquivos convencionais.</p></div>
+    <div class="card"><b class="t">Regra explícita</b><p>"Edite somente este arquivo; stubs apenas apontam para cá", escrito no próprio AGENTS.md.</p></div>
+  </div>
+  <aside class="notes">Seis repositórios têm o trio completo de stubs resolvendo para o mesmo AGENTS.md. A consequência prática: trocar de IDE ou de modelo não muda o comportamento do projeto, porque a instrução é do repositório, não da ferramenta. O custo de manutenção é de um arquivo; mudou a regra, muda-se o AGENTS.md, e os stubs continuam válidos para sempre porque não contêm regra nenhuma. Há um efeito humano também: quem clona o repositório lê o mesmo manual que a IA lê, e o AGENTS.md vira a documentação de entrada do projeto. Na prática, isso apareceu quando o mesmo projeto foi aberto em ferramentas diferentes na mesma semana: o comportamento se manteve porque o manual era o mesmo, mudava só o leitor. Transição: com instruções únicas, o hub consegue rotear pedidos.</aside>
+</section>
+
+<!-- 9 -->
+<section>
+  <p class="kicker">Ato 2 · Roteamento</p>
+  <h2>O hub como orquestrador: cada pedido cai no lugar certo</h2>
+  <table class="cmp small">
+    <tr><th>Pedido típico</th><th>Repo alvo</th><th>Skill / fluxo</th></tr>
+    <tr><td>"Cria uma ameaça para a Floresta das Aranhas"</td><td>shadowdarkrpg-fantasia</td><td><code>shadowdark-ameaca</code> + <code>AmeacaModelo.md</code></td></tr>
+    <tr><td>"Atualiza as regras no app"</td><td>escudo-mestre-*</td><td><code>migrate:from-*</code> → testes → deploy</td></tr>
+    <tr><td>"Converte esse PDF para o vault"</td><td>hub</td><td><code>scripts/pdf_to_md</code> (§8 do AGENTS)</td></tr>
+    <tr><td>"Continua a adaptação de BG3"</td><td>bg3-fan4fun</td><td>PROGRESSO.md → pipeline de 8 etapas</td></tr>
+    <tr><td>"Sincroniza tudo"</td><td>hub + filhos</td><td><code>hub-sync-repos</code> → <code>sync_repos</code></td></tr>
+  </table>
+  <aside class="notes">A tabela de roteamento vive no AGENTS.md do hub. Percorram uma linha inteira: no pedido "atualiza as regras no app", quem pede não diz repositório, comando nem ordem; a tabela resolve os três e ainda embute o passo de testes. Quem usa fala em linguagem natural, e o agente resolve repo, skill e comando. É a diferença entre uma IA que responde e uma IA que opera o projeto. E quando um pedido novo não casa com linha nenhuma, isso também é informação: provavelmente falta uma skill ou uma linha na tabela. A linha do BG3 mostra o outro extremo do roteamento: não é um comando, é um processo inteiro com estado, e a tabela aponta para o arquivo de estado antes de qualquer etapa ser executada. Transição: o que existe nesse catálogo para onde rotear?</aside>
+</section>
+
+<!-- 10 -->
+<section>
+  <p class="kicker">Ato 2 · Catálogo</p>
+  <h2>Catálogo vivo: seis famílias de skills</h2>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t">Book-skills</b><p>Livros e suplementos viram skills consultáveis sob demanda.</p></div>
+    <div class="card"><b class="t">Tabelas roláveis</b><p><code>*-tabelas</code>: consultar e executar a tabela, não só ler.</p></div>
+    <div class="card"><b class="t">Workflow de conteúdo</b><p>Criar artefatos com molde e critério verificável.</p></div>
+    <div class="card"><b class="t">Workflow de app</b><p>O ciclo dos PWAs, do desenvolvimento ao gate de entrega.</p></div>
+    <div class="card"><b class="t">Estilo e qualidade</b><p>Prosa e revisão, com a voz manual do autor acima das regras.</p></div>
+    <div class="card"><b class="t">Meta-skills</b><p>Skills que criam e governam outras skills e scripts.</p></div>
+  </div>
+  <aside class="notes">Não tentem memorizar a lista; reparem nas famílias e na precedência. As tabelas roláveis transformam leitura em execução: pedir um encontro executa a tabela em vez de só mostrá-la. As skills de estilo têm hierarquia declarada, e a edição manual do autor fica acima delas. O destaque é a família meta: existe uma skill cuja função é fabricar outras a partir de livros, extraindo capítulos sob demanda em vez de despejar o livro inteiro no contexto. O sistema se expande usando o próprio sistema. Os casos concretos de cada família aparecem nos próximos atos. Em uma frase: catálogo bom não é lista longa, é lista com família, dono e precedência, para o agente saber não só o que existe, mas o que vale primeiro quando duas skills combinam com o mesmo pedido. Transição: procedimento sem ferramenta determinística ainda improvisa; entramos nos scripts.</aside>
+</section>
+
+<!-- 11 -->
+<section>
+  <p class="kicker">Ato 3 · Caso: sync</p>
+  <h2>Skill decide, script executa: sincronizar 8 repos num comando</h2>
+  <pre><code># cwd = raiz do hub
+./scripts/sync_repos/sync_repos.sh --status
+./scripts/sync_repos/sync_repos.sh --msg hub="…" -y   # uma --msg por repo sujo</code></pre>
+  <div class="grid g3">
+    <div class="card"><b class="t">A skill (hub-sync-repos)</b><p>Lê o status, redige uma mensagem por repo, chama o CLI e apresenta o relatório.</p></div>
+    <div class="card"><b class="t">O script (sync_repos)</b><p>Pull com rebase antes de commit e push; continua após falha parcial; relatório OK / SKIP / FAIL.</p></div>
+    <div class="card"><b class="t">Os guardrails</b><p>Sem force push, sem tocar em <code>.git/config</code>; árvore suja falha o pull só daquele repo.</p></div>
+  </div>
+  <aside class="notes">Antes, isto era um loop manual de git em oito diretórios, com mensagens improvisadas e o risco de esquecer um repositório. Depois, virou um pedido em linguagem natural. A divisão de trabalho é o padrão que se repete no hub inteiro: julgamento na skill, determinismo no script, segurança nas regras dos dois. A mensagem é por repositório porque um texto genérico em oito históricos diferentes seria ruído. Falha num repo não aborta os outros, mas o relatório final marca a falha. E, se faltar um clone, o próprio status sugere o bootstrap pontual. Se houver demonstração ao vivo, o comando seguro é o de status: ele não altera nada e já mostra clones faltando, repositórios sujos e o formato do relatório que a skill apresentaria antes de qualquer commit. Transição: é o bootstrap que monta esse workspace.</aside>
+</section>
+
+<!-- 12 -->
+<section>
+  <p class="kicker">Ato 3 · Instalação em cadeia</p>
+  <h2>Bootstrap: do clone do hub ao workspace completo</h2>
+  <pre><code>git clone …/ttrpg.git && cd ttrpg
+./scripts/bootstrap.sh                        # todos os filhos do manifest
+./scripts/bootstrap.sh --only bg3-fan4fun     # só um repo
+./scripts/bootstrap.sh --skip-pull            # só clona o que falta</code></pre>
+  <p>O mesmo <code>repos.manifest.json</code> alimenta bootstrap, sync e o roteamento do AGENTS: uma declaração, três consumidores.</p>
+  <aside class="notes">Instalação em cadeia é o que transforma "o meu workspace" em "um workspace reproduzível": máquina nova, um clone, um comando, e os filhos estão no lugar. A peça que destrava isso é pequena, um manifest declarativo com identificador, endereço e caminho de cada filho. Adicionar um repositório ao ecossistema é adicionar uma entrada nele e um AGENTS.md; o resto da máquina passa a enxergá-lo, inclusive a sincronização quando um clone está faltando. Existe ainda o espelho para Windows, porque o workspace não podia depender de um sistema só. O manifest também é o que permite à sincronização avisar que um clone sumiu e sugerir o bootstrap daquele identificador, em vez de falhar com um caminho inexistente no meio do processo. Transição: ferramenta nova também precisa de governança.</aside>
+</section>
+
+<!-- 13 -->
+<section>
+  <p class="kicker">Ato 3 · Governança</p>
+  <h2>Script novo não nasce sem aprovação: a skill hub-scripts</h2>
+  <div class="flow">
+    <div class="step"><b>Parar</b>antes de gravar qualquer .py/.sh novo</div><div class="arr">→</div>
+    <div class="step"><b>Perguntar</b>AskQuestion com nome, o que faz e tecnologias</div><div class="arr">→</div>
+    <div class="step"><b>Permanente</b>scripts/{nome}/ versionado + catálogo atualizado</div><div class="arr">ou</div>
+    <div class="step"><b>Pontual</b>/tmp, usado e apagado na mesma sessão</div><div class="arr">ou</div>
+    <div class="step"><b>Não criar</b>usar CLI existente ou one-liner</div>
+  </div>
+  <p>Sem essa gate, todo projeto com IA vira uma pasta de scripts órfãos. Com ela, cada automação permanente tem dono, README e registro no AGENTS.</p>
+  <aside class="notes">Esta skill é governança pura, e das mais importantes. Ela inverte o padrão: em vez de a IA sair criando utilitários, ela precisa justificar nome, propósito e tecnologias antes de persistir qualquer arquivo executável, e oferecer explicitamente a opção de não criar. O permanente ganha pasta própria, executável, wrappers, README e registro no catálogo do AGENTS.md, para ser descoberto pelo catálogo e não por arqueologia de pastas. O pontual não é catalogado nem commitado. E "não criar" é levado a sério: às vezes a resposta certa é um comando inline ou um CLI que já existe. A pergunta da gate tem três respostas legítimas, e a terceira é a que mais protege o projeto: automação permanente sem dono vira dívida, mesmo quando o código dela funciona bem. Transição: com as ferramentas sob controle, vejamos o que elas fazem encadeadas.</aside>
+</section>
+
+<!-- 14 -->
+<section>
+  <p class="kicker">Ato 3 · Pipelines</p>
+  <h2>Pipelines de conversão encadeados</h2>
+  <div class="flow">
+    <div class="step"><b>pdf_to_md</b>PDF → Markdown Obsidian (OCR híbrido, wikilinks)</div><div class="arr">→</div>
+    <div class="step"><b>md_to_txt</b>Markdown → texto limpo para narração</div><div class="arr">→</div>
+    <div class="step"><b>tts_audio</b>texto → MP3 (Edge neural, fallback offline)</div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><b class="t">pdf_translate</b><p>PDF → PDF traduzido preservando layout, com glossário de domínio e manifest revisável antes de aplicar.</p></div>
+    <div class="card"><b class="t">md_to_pdf</b><p>Motor genérico Markdown → PDF (WeasyPrint): papel, CSS e fontes por flag; o tema é do conteúdo, não do motor.</p></div>
+  </div>
+  <p>Se uma tarefa se repete, ela desce um degrau: de conversa → skill; de skill → script; de script → comando catalogado.</p>
+  <aside class="notes">Cada CLI faz uma coisa e compõe com a próxima por formato, não por acoplamento. Percorram a cadeia com um exemplo real de preparação de sessão: o PDF de uma missão vira Markdown com wikilinks no vault, o texto narrável é extraído dele e o TTS gera o áudio de preparação. O caminho inverso também existe: o Markdown de um suplemento vira PDF tipográfico publicável. Reparem no pdf_translate: há revisão humana via manifest entre traduzir e gerar, o mesmo padrão de portão que aparece no BG3. A frase de fecho resume a regra de evolução de tudo o que vimos neste ato. Composição por formato também significa troca isolada: outro motor de PDF ou outra voz de narração entra na cadeia sem tocar nas etapas vizinhas. Transição: falta o molde.</aside>
+</section>
+
+<!-- 15 -->
+<section>
+  <p class="kicker">Ato 3 · Modelos de conteúdo</p>
+  <h2>Modelos de estrutura: a IA preenche o molde, não inventa o formato</h2>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t">FichaModelo.md</b><p>Ficha de personagem Shadowdark, usada pela skill <code>shadowdark-personagem</code>.</p></div>
+    <div class="card"><b class="t">AmeacaModelo.md</b><p>Dois modos: ficha avulsa completa ou verbete de Bestiário enxuto; a skill escolhe, o molde fixa o formato.</p></div>
+    <div class="card"><b class="t">AventuraModelo.md</b><p>Esqueleto por padrão, conteúdo completo só se pedido; variantes catalogadas no molde.</p></div>
+    <div class="card"><b class="t">Equilibrar Encontros.md</b><p>Orçamento de nível (NV × nº de PJs): "encontro médio" vira conta verificável.</p></div>
+    <div class="card"><b class="t">Templates BG3 de mesa</b><p>Fichas de desafio, inimigo, item e personagem em <code>templates/mesa/</code>.</p></div>
+    <div class="card"><b class="t">Templates de registro BG3</b><p>Progresso, catálogos, estado e decisões com molde próprio.</p></div>
+  </div>
+  <aside class="notes">Molde é a forma mais barata de qualidade: separa o que é formato, fixo no arquivo, do que é criação, variável a cada uso. O efeito colateral é consistência entre dezenas de arquivos escritos em sessões e por agentes diferentes. O molde também carrega decisão, não só campos: o de aventura declara que o padrão é gerar só o esqueleto, protegendo o autor de receber dez páginas quando pediu uma estrutura; o de ameaça documenta quando usar cada modo. E o último cartão adianta o tema do tracking: até a memória do projeto tem molde. Quando um artefato sai fora do padrão, a correção é no molde ou na skill, uma única vez, e não arquivo a arquivo: é assim que o padrão melhora com o uso em vez de degradar. Transição: vejamos tudo isso operando junto.</aside>
+</section>
+
+<!-- 16 -->
+<section>
+  <p class="kicker">Ato 4 · Caso Fantasia</p>
+  <h2>Criação de conteúdo como linha de produção</h2>
+  <div class="flow">
+    <div class="step"><b>fantasia-campanha</b>lore e continuidade do Mundo Fraturado</div><div class="arr">→</div>
+    <div class="step"><b>fantasia-aventura</b>esqueleto A0N a partir do AventuraModelo</div><div class="arr">→</div>
+    <div class="step"><b>fantasia-local-encontro</b>um local = um arquivo, tabelas d6 do sítio</div><div class="arr">→</div>
+    <div class="step"><b>shadowdark-ameaca</b>fichas por AmeacaModelo</div><div class="arr">→</div>
+    <div class="step"><b>equilibrar-encontros</b>orçamento NV fecha o encontro</div>
+  </div>
+  <p>317 arquivos Markdown e 104 commits em seis semanas, com a voz manual do autor protegida pela skill <code>edicoes-manuais-autor</code>.</p>
+  <aside class="notes">O Fantasia é o caso de conteúdo mais maduro do hub. Contem os elos em voz alta: sem o contexto da campanha, a aventura nasce genérica; sem o local, o encontro não tem território; sem o orçamento, nasce desbalanceado. Cada skill consome a saída da anterior, exatamente como as CLIs de conversão compunham por formato. A frase de evidência fica só aqui: é a escala desse repositório, não um número global. E há uma governança editorial importante: quando o autor edita um texto à mão, essa versão tem prioridade sobre qualquer skill de estilo. A ênfase aqui é confiança: automação que reescreve texto já editado pelo autor destrói a confiança no sistema inteiro, por isso a prioridade está escrita na skill, e não na memória de quem opera. Transição: do conteúdo para o app.</aside>
+</section>
+
+<!-- 17 -->
+<section>
+  <p class="kicker">Ato 4 · Vault → App</p>
+  <h2>Do Markdown ao PWA: dois Escudos, o mesmo fluxo</h2>
+  <div class="flow">
+    <div class="step"><b>Editar MD no vault</b>Fonte única do conteúdo</div><div class="arr">→</div>
+    <div class="step"><b>yarn migrate:from-*</b>16 migradores geram o JSON</div><div class="arr">→</div>
+    <div class="step"><b>yarn test:run</b>testes nos dois apps</div><div class="arr">→</div>
+    <div class="step"><b>build + Pages</b>PWA offline publicado</div>
+  </div>
+  <div class="grid g2 tight">
+    <div class="card"><b class="t">Escudo OPRPG</b><p>Regras, rolagens e ameaças: dados em <code>public/data/</code>, skill própria para cada etapa.</p></div>
+    <div class="card"><b class="t">Escudo Shadowdark</b><p>Regras, bestiário, geradores e arcanos migrados do vault.</p></div>
+  </div>
+  <div class="grid g3 tight" style="margin-top:10px">
+    <div class="card"><b class="t">Pré-entrega</b><p>Testes + simulação do CI antes de entrega, commit ou deploy.</p></div>
+    <div class="card"><b class="t">Testes como contrato</b><p>JSON fora do formato esperado quebra o teste, não a mesa.</p></div>
+    <div class="card"><b class="t">COPYRIGHT_FREE</b><p>Build que omite o que a licença não cobre: conformidade como funcionalidade.</p></div>
+  </div>
+  <aside class="notes">Neste caso, o conteúdo nunca é editado no JSON: edita-se no vault, migra-se, testa-se e publica-se. Não há sincronização automática, de propósito; a migração é um ato explícito e revisável. Os dezesseis migradores são pequenos e separados por tipo de dado, regras, ameaças, tabelas e catálogos, orquestrados por um comando único em cada app, de modo que uma falha diz exatamente qual tipo quebrou. A faixa de baixo é a qualidade virando comportamento: o gate de pré-entrega é uma skill que dispara nas palavras entregar e deploy, e a conformidade de licença virou flag de build testável. O segundo Escudo reaproveitou esse padrão inteiro. A edição direta do JSON existe só como exceção documentada de hotfix, com a mesma obrigação de rodar os testes depois; a rotina continua sendo editar no vault e migrar, nunca o contrário. Transição: o caso mais longo é o BG3.</aside>
+</section>
+
+<!-- 18 -->
+<section>
+  <p class="kicker">Ato 4 · Caso BG3</p>
+  <h2>BG3 → mesa de RPG: um pipeline de 8 etapas com portões</h2>
+  <div class="flow">
+    <div class="step"><b>catalogar</b></div><div class="arr">→</div><div class="step"><b>coordenar</b></div><div class="arr">→</div>
+    <div class="step"><b>pesquisar</b></div><div class="arr">→</div><div class="step"><b>perguntar</b></div>
+  </div>
+  <div class="flow">
+    <div class="step"><b>adaptar</b></div><div class="arr">→</div><div class="step"><b>auditar</b></div><div class="arr">→</div>
+    <div class="step"><b>aprovar</b></div><div class="arr">→</div><div class="step"><b>registrar</b></div>
+  </div>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t">5 skills, um pipeline</b><p>Orquestrar, pesquisar, adaptar, auditar e rastrear, cada etapa com artefato de saída.</p></div>
+    <div class="card"><b class="t">Classificação da informação</b><p>Toda afirmação é <code>FATO_WIKI</code>, <code>REGRA_DND5E</code>, <code>ADAPTACAO_PROJETO</code>, <code>INFERENCIA</code> ou <code>LACUNA</code>.</p></div>
+    <div class="card"><b class="t">Portão de decisão</b><p>Em "perguntar", o agente para e apresenta as decisões materiais; rota narrativa nunca é escolhida em silêncio.</p></div>
+  </div>
+  <aside class="notes">Transformar um videogame de centenas de horas numa campanha jogável é um problema de engenharia de conteúdo. A ordem do pipeline impõe as separações: pesquisar produz um dossiê só com fatos, sem mecânica; adaptar só começa depois da decisão do autor; auditar confere fidelidade, regras e balanceamento antes da aprovação. A etapa "perguntar" é a mais incomum: a skill obriga o agente a parar, sem permissão estrutural para decidir sozinho. E a classificação da informação garante que inferência nunca se disfarque de fato. Cada etapa tem uma skill dona e um artefato nomeado. A auditoria usa uma rubrica editorial registrada, então aprovar não é uma impressão do momento: é uma decisão com critério anotado, que o tracking guarda junto do estado de cada unidade produzida. Transição: um projeto assim só anda com memória explícita.</aside>
+</section>
+
+<!-- 19 -->
+<section>
+  <p class="kicker">Ato 4 · Tracking</p>
+  <h2>Tracking como memória: nenhuma sessão começa do zero</h2>
+  <pre><code>## A — Onde paramos
+| etapa_fluxo        | registrar                              |
+| regiao             | A1-WIL (próxima na ordem de produção)  |
+| proximo_passo      | Catalogar região A1-WIL — $orchestrate |
+| bloqueio           | nenhum                                 |
+— PROGRESSO.md (bg3-fan4fun), lido primeiro em toda sessão</code></pre>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t">Registros vivos</b><p>Decisões, catálogos de eventos e fontes e pendências na raiz do repo.</p></div>
+    <div class="card"><b class="t">Skill dedicada</b><p><code>track-bg3-production</code>: obrigatória ao iniciar, pausar e encerrar a sessão.</p></div>
+    <div class="card"><b class="t">Templates prontos</b><p>Até o estado futuro já nasce estruturado, sem inventar fatos para preencher.</p></div>
+  </div>
+  <aside class="notes">Este é o antídoto direto para o problema do segundo slide. O trecho na tela responde em segundos onde estamos, em que etapa do fluxo, qual é o próximo passo e se há bloqueio, inclusive nomeando a skill que executa o próximo passo. O estado do projeto mora em arquivos, não no histórico do chat: trocar de agente ou voltar um mês depois custa a leitura de um arquivo. A regra de ouro é nunca criar fatos para inicializar um arquivo vazio; estado vazio declarado vale mais que estado inventado bonito. Para projetos longos com IA, esta é provavelmente a prática de maior retorno. Os registros são deliberadamente legíveis por pessoas e por agentes ao mesmo tempo: nada de banco de dados ou ferramenta proprietária entre a memória do projeto e quem precisa consultá-la numa segunda-feira qualquer. Transição: o que tudo isso muda na prática?</aside>
+</section>
+
+<!-- 20 -->
+<section>
+  <p class="kicker">Ato 5 · Antes / depois</p>
+  <h2>Antes e depois, tarefa por tarefa</h2>
+  <table class="cmp small">
+    <tr><th>Tarefa</th><th>Antes</th><th>Depois</th></tr>
+    <tr><td>Sincronizar repos</td><td class="bad">git manual em 8 diretórios</td><td class="ok">1 pedido → skill + sync_repos com relatório</td></tr>
+    <tr><td>Setup de máquina nova</td><td class="bad">clonar repo a repo, de memória</td><td class="ok"><code>bootstrap.sh</code> a partir do manifest</td></tr>
+    <tr><td>Criar uma ameaça/ficha</td><td class="bad">formato reinventado a cada arquivo</td><td class="ok">molde + skill + orçamento NV</td></tr>
+    <tr><td>Publicar conteúdo no app</td><td class="bad">editar JSON na mão</td><td class="ok">MD no vault → migrate → testes → Pages</td></tr>
+    <tr><td>Retomar um projeto</td><td class="bad">reexplicar tudo ao agente</td><td class="ok">PROGRESSO.md e registros: leitura de 1 arquivo</td></tr>
+  </table>
+  <aside class="notes">Percorram a coluna do meio devagar: nenhum item era difícil, todos eram fricção repetida. O ganho do sistema não é um salto único de inteligência, é a eliminação sistemática dessa fricção. Duas honestidades importam aqui. Primeira: "depois" não significa zero trabalho humano, significa trabalho humano concentrado em decisão, escrita e revisão. Segunda: cada linha custou uma formalização única, uma skill, um script ou um molde, que depois se paga em todas as repetições seguintes. É investimento com retorno composto, não truque de produtividade. Se a plateia reconhecer a própria rotina na coluna do meio, esse é exatamente o ponto: quase ninguém perde tempo com tarefas difíceis, perde com tarefas repetidas que nunca foram formalizadas. Transição: como levar isso para outro projeto?</aside>
+</section>
+
+<!-- 21 -->
+<section>
+  <p class="kicker">Ato 5 · Replicação</p>
+  <h2>Como replicar em outro projeto: 6 passos</h2>
+  <div class="flow">
+    <div class="step"><b>1 · AGENTS.md por repo</b>+ stubs para cada IA</div><div class="arr">→</div>
+    <div class="step"><b>2 · Mapa declarativo</b>manifest dos subprojetos</div><div class="arr">→</div>
+    <div class="step"><b>3 · Skills com dono</b>canônica no conteúdo, índice na raiz</div><div class="arr">→</div>
+    <div class="step"><b>4 · Moldes</b>um por artefato repetido</div><div class="arr">→</div>
+    <div class="step"><b>5 · Scripts governados</b>aprovação e catálogo</div><div class="arr">→</div>
+    <div class="step"><b>6 · Tracking</b>estado lido primeiro em toda sessão</div>
+  </div>
+  <p>Comece pelo passo 6 se só puder fazer um: memória entre sessões muda tudo o resto.</p>
+  <aside class="notes">Nada aqui depende de RPG: troquem ameaça por relatório, vault por documentação e Escudo pelo produto de vocês, e a estrutura continua de pé. Mas não tentem implantar tudo de uma vez. O passo um é um arquivo de texto por repositório; o passo seis, um arquivo de estado de meia página. As primeiras skills úteis costumam ser duas ou três: a tarefa mais repetida, o artefato mais refeito, o comando mais esquecido. Este hub chegou ao tamanho atual por formalização incremental, uma repetição de cada vez, ao longo de meses de uso real. A ordem importa menos que começar versionado. O erro a evitar é catalogar tudo de uma vez antes de usar: formalizem a primeira repetição real, usem por uma semana e deixem o próprio uso decidir qual é a próxima skill a nascer. Transição: fecho.</aside>
+</section>
+
+<!-- 22 -->
+<section class="center closing">
+  <p class="kicker">Encerramento</p>
+  <h2 style="margin-top:1.1em">De "pedir coisas à IA" para operar um sistema com ela</h2>
+  <h3 style="font-size:1.25em; margin-top:.7em">Perguntas?</h3>
+  <aside class="notes">Fecho, um minuto. O que foi construído não é uma coleção de prompts: é uma infraestrutura de colaboração entre pessoa e IA, com instruções versionadas, ferramentas determinísticas, moldes, portões e memória. O conteúdo de RPG foi o domínio; o método é transferível para qualquer projeto longo. Se a pergunta for por onde começar, a resposta curta é o slide anterior: instrução única, tracking e as skills das tarefas mais repetidas. Se for sobre escalar para equipe, a conversa é revisão em diff, porque tudo aqui é texto em git, revisável como código. Se sobrar tempo, a demonstração mais curta é abrir o AGENTS.md do hub e uma skill canônica lado a lado: os dois arquivos mostram o sistema inteiro em miniatura. Obrigado; se quiserem, abro os arquivos reais no editor.</aside>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', controls: true, progress: true,
+    transition: 'slide', width: 1280, height: 800, margin: 0.06,
+    plugins: [ RevealNotes ]
+  });
+</script>
+</body>
+</html>

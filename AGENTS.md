@@ -11,6 +11,7 @@ Este repo é filho do hub **TTRPG** (`repos/public-rpg-repo/`).
 |-------|-----|
 | `OP-RPG/` | Campanhas/oneshots Ordem Paranormal legadas (público) |
 | `SD-RPG/` | PDFs públicos Shadowdark (Astraldark tipográfico) |
+| `apresentacoes/` | Centralizador das apresentações HTML (Reveal.js) do hub e dos projetos; publicado via GitHub Pages pelo workflow `.github/workflows/pages.yml` (artefato = esta pasta; raiz do site = `apresentacoes/index.html`) |
 
 ## Shadowdark / Astraldark
 

@@ -22,6 +22,13 @@ ttrpg/repos/public-rpg-repo/
 |-------|----------|
 | `OP-RPG/` | Campanhas e oneshots Ordem Paranormal legadas (público) |
 | `SD-RPG/` | PDFs públicos Shadowdark — por agora o tipográfico Astraldark |
+| `apresentacoes/` | Apresentações HTML publicadas via GitHub Pages |
+
+## Apresentações
+
+Slides públicos do hub TTRPG, publicados a partir de `apresentacoes/`:
+
+- [Como o hub TTRPG foi construído com skills de IA](https://fernandomanoelalmeida.github.io/public-rpg-repo/hub-ttrpg-skills/) — estudo de caso técnico sobre skills, scripts facilitadores e memória de projeto. Índice de apresentações: [fernandomanoelalmeida.github.io/public-rpg-repo](https://fernandomanoelalmeida.github.io/public-rpg-repo/)
 
 ## SD-RPG (Shadowdark público)
 
