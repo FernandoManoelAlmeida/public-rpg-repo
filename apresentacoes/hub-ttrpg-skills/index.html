@@ -55,6 +55,7 @@
 
   /* Mobile (retrato): vale para a visualização de rolagem do Reveal */
   @media (max-width: 700px){
+    html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
     .reveal .slides section{ padding:28px 20px 64px; box-sizing:border-box; }
     .reveal pre code{ box-sizing:border-box; }
     .reveal .controls, .reveal .slide-number{ z-index:30; }
@@ -74,12 +75,12 @@
     .step{ width:100%; font-size:.58em; text-align:left; padding:9px 12px; }
     .step b{ display:inline; margin-right:.4em; }
     .arr{ transform:rotate(90deg); align-self:center; padding:0; line-height:1; }
-    .reveal pre code{ font-size:.66em; max-height:none; overflow-x:auto; }
+    .reveal pre code{ font-size:.74em; max-height:none; overflow-x:auto; }
     table.cmp, table.cmp.small{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; font-size:.56em; }
     table.cmp th, table.cmp td, table.cmp.small th, table.cmp.small td{ padding:7px 9px; }
     .num{ font-size:1.5em !important; }
     .nums .num{ font-size:1.25em !important; }
-    .tag{ font-size:.62em; }
+    .tag{ font-size:.68em; }
     .closing h2{ font-size:1.05em; }
   }
 </style>
@@ -529,14 +530,15 @@ description: >-
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 <script>
-  // Em telas estreitas o canvas acompanha a largura do aparelho: a escala
-  // fica ~1 e a visualização de rolagem empilha os slides em páginas.
+  // Em telas estreitas usa-se um canvas fixo de 400px: a escala é sempre
+  // calculada pelo Reveal a partir da largura disponível (nunca de uma
+  // foto de innerWidth na carga, que pode divergir da viewport real).
   const larguraEstreita = window.matchMedia('(max-width: 700px)').matches;
   Reveal.initialize({
     hash: true, slideNumber: 'c/t', controls: true, progress: true,
     transition: 'slide', margin: 0.06,
-    width: larguraEstreita ? window.innerWidth : 1280, height: 800,
-    scrollActivationWidth: 480,
+    width: larguraEstreita ? 400 : 1280, height: 800,
+    scrollActivationWidth: 700,
     plugins: [ RevealNotes ]
   });
 </script>
