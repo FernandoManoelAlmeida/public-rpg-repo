@@ -55,15 +55,28 @@
 
   /* Mobile (retrato): vale para a visualização de rolagem do Reveal */
   @media (max-width: 700px){
-    html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
-    .reveal .slides section{ padding:28px 20px 64px; box-sizing:border-box; }
+    html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; overflow-x:clip; }
+    /* Rolagem contínua: a página cresce com o conteúdo em vez de cortá-lo
+       na altura da viewport (comportamento padrão da scroll view).
+       Seletores longos para vencer as regras !important do próprio Reveal. */
+    .reveal .slides{ width:100% !important; max-width:100% !important; }
+    .reveal .slides .scroll-page{ height:auto !important; min-height:0 !important; width:100% !important; max-width:100% !important; }
+    .reveal .slides .scroll-page .scroll-page-sticky{ position:relative !important; height:auto !important; top:auto !important; }
+    .reveal .slides .scroll-page .scroll-page-content{ position:relative !important; height:auto !important; overflow:visible !important; width:100% !important; max-width:100% !important; }
+    .reveal .slides .scroll-page .scroll-page-content>section{ position:relative !important; transform:none !important; width:100% !important; max-width:100% !important; height:auto !important; top:auto !important; left:auto !important; padding:28px 20px 64px; box-sizing:border-box; }
     .reveal pre code{ box-sizing:border-box; }
     .reveal .controls, .reveal .slide-number{ z-index:30; }
     .reveal h1{ font-size:1.5em; line-height:1.12; }
     .reveal h2, .ato6 h2{ font-size:1.08em; line-height:1.2; }
     .reveal h3{ font-size:.8em; }
+    .quote{ font-size:.52em !important; overflow-wrap:break-word; }
     .kicker{ font-size:.42em !important; }
-    .reveal p, .reveal li{ font-size:.6em; line-height:1.5; }
+    .big{ font-size:.95em !important; }
+    .sub{ font-size:.8em !important; }
+    .reveal p, .reveal li{ font-size:.6em; line-height:1.5; overflow-wrap:break-word; }
+    .reveal ul{ margin-left:.35em; }
+    .tl{ margin-left:0; padding-left:.8em; }
+    .tl li{ overflow-wrap:anywhere; }
     .grid.g2, .grid.g3, .grid.g4{ grid-template-columns:1fr; gap:10px; }
     .grid.nums{ grid-template-columns:1fr 1fr; }
     .card{ padding:14px 16px; }
@@ -72,8 +85,8 @@
     .tight .card b.t, .ato6 .tight .card b.t{ font-size:.66em; }
     .tight .card p, .ato6 .tight .card p{ font-size:.58em; line-height:1.4; }
     .flow{ flex-direction:column; gap:6px; margin:.35em 0; }
-    .step{ width:100%; font-size:.58em; text-align:left; padding:9px 12px; }
-    .step b{ display:inline; margin-right:.4em; }
+    .step{ width:100%; box-sizing:border-box; font-size:.58em; text-align:left; padding:9px 12px; }
+    .step b{ display:block; margin:0 0 .15em; }
     .arr{ transform:rotate(90deg); align-self:center; padding:0; line-height:1; }
     .reveal pre code{ font-size:.74em; max-height:none; overflow-x:auto; }
     table.cmp, table.cmp.small{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; font-size:.56em; }
