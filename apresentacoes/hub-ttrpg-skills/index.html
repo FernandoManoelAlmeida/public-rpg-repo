@@ -52,6 +52,36 @@
   .foot{ position:absolute; bottom:-46px; left:0; font-size:.42em; color:#5c6270; }
   .reveal .slide-number{ color:#5c6270; background:transparent; }
   .quote{ border-left:4px solid var(--amber); padding-left:.8em; font-style:italic; color:#d8d4c8; font-size:.62em !important; }
+
+  /* Mobile (retrato): vale para a visualização de rolagem do Reveal */
+  @media (max-width: 700px){
+    .reveal .slides section{ padding:28px 20px 64px; box-sizing:border-box; }
+    .reveal pre code{ box-sizing:border-box; }
+    .reveal .controls, .reveal .slide-number{ z-index:30; }
+    .reveal h1{ font-size:1.5em; line-height:1.12; }
+    .reveal h2, .ato6 h2{ font-size:1.08em; line-height:1.2; }
+    .reveal h3{ font-size:.8em; }
+    .kicker{ font-size:.42em !important; }
+    .reveal p, .reveal li{ font-size:.6em; line-height:1.5; }
+    .grid.g2, .grid.g3, .grid.g4{ grid-template-columns:1fr; gap:10px; }
+    .grid.nums{ grid-template-columns:1fr 1fr; }
+    .card{ padding:14px 16px; }
+    .card p{ font-size:.6em; }
+    .tight .card{ padding:11px 13px; }
+    .tight .card b.t, .ato6 .tight .card b.t{ font-size:.66em; }
+    .tight .card p, .ato6 .tight .card p{ font-size:.58em; line-height:1.4; }
+    .flow{ flex-direction:column; gap:6px; margin:.35em 0; }
+    .step{ width:100%; font-size:.58em; text-align:left; padding:9px 12px; }
+    .step b{ display:inline; margin-right:.4em; }
+    .arr{ transform:rotate(90deg); align-self:center; padding:0; line-height:1; }
+    .reveal pre code{ font-size:.66em; max-height:none; overflow-x:auto; }
+    table.cmp, table.cmp.small{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; font-size:.56em; }
+    table.cmp th, table.cmp td, table.cmp.small th, table.cmp.small td{ padding:7px 9px; }
+    .num{ font-size:1.5em !important; }
+    .nums .num{ font-size:1.25em !important; }
+    .tag{ font-size:.62em; }
+    .closing h2{ font-size:1.05em; }
+  }
 </style>
 </head>
 <body>
@@ -499,9 +529,14 @@ description: >-
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 <script>
+  // Em telas estreitas o canvas acompanha a largura do aparelho: a escala
+  // fica ~1 e a visualização de rolagem empilha os slides em páginas.
+  const larguraEstreita = window.matchMedia('(max-width: 700px)').matches;
   Reveal.initialize({
     hash: true, slideNumber: 'c/t', controls: true, progress: true,
-    transition: 'slide', width: 1280, height: 800, margin: 0.06,
+    transition: 'slide', margin: 0.06,
+    width: larguraEstreita ? window.innerWidth : 1280, height: 800,
+    scrollActivationWidth: 480,
     plugins: [ RevealNotes ]
   });
 </script>
