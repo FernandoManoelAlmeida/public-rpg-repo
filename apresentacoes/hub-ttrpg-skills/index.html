@@ -380,15 +380,110 @@ description: >-
     <div class="step"><b>6 · Tracking</b>estado lido primeiro em toda sessão</div>
   </div>
   <p>Comece pelo passo 6 se só puder fazer um: memória entre sessões muda tudo o resto.</p>
-  <aside class="notes">Nada aqui depende de RPG: troquem ameaça por relatório, vault por documentação e Escudo pelo produto de vocês, e a estrutura continua de pé. Mas não tentem implantar tudo de uma vez. O passo um é um arquivo de texto por repositório; o passo seis, um arquivo de estado de meia página. As primeiras skills úteis costumam ser duas ou três: a tarefa mais repetida, o artefato mais refeito, o comando mais esquecido. Este hub chegou ao tamanho atual por formalização incremental, uma repetição de cada vez, ao longo de meses de uso real. A ordem importa menos que começar versionado. O erro a evitar é catalogar tudo de uma vez antes de usar: formalizem a primeira repetição real, usem por uma semana e deixem o próprio uso decidir qual é a próxima skill a nascer. Transição: fecho.</aside>
+  <aside class="notes">Nada aqui depende de RPG: troquem ameaça por relatório, vault por documentação e Escudo pelo produto de vocês, e a estrutura continua de pé. Mas não tentem implantar tudo de uma vez. O passo um é um arquivo de texto por repositório; o passo seis, um arquivo de estado de meia página. As primeiras skills úteis costumam ser duas ou três: a tarefa mais repetida, o artefato mais refeito, o comando mais esquecido. Este hub chegou ao tamanho atual por formalização incremental, uma repetição de cada vez, ao longo de meses de uso real. A ordem importa menos que começar versionado. O erro a evitar é catalogar tudo de uma vez antes de usar: formalizem a primeira repetição real, usem por uma semana e deixem o próprio uso decidir qual é a próxima skill a nascer. Transição: para provar a transferência, o próximo ato aplica este mesmo passo-a-passo a um projeto de desenvolvimento de software.</aside>
 </section>
 
 <!-- 22 -->
+<section>
+  <p class="kicker">Ato 6 · Aplicação</p>
+  <h2>E se fosse software? O mesmo desenho, outro domínio</h2>
+  <p class="sub">Exemplo fictício de referência: um produto web com app, API e documentação.</p>
+  <div class="grid g4 tight">
+    <div class="card"><b class="t">AGENTS.md orquestrador</b><p>Na raiz do workspace: produtos, repos e serviços; roteia cada pedido.</p></div>
+    <div class="card"><b class="t">Jira</b><p>Fonte do trabalho: épicos, histórias e board. Não guarda código.</p></div>
+    <div class="card"><b class="t">Azure DevOps</b><p>Fonte do código: Repos e Pipelines. Não guarda a prioridade do negócio.</p></div>
+    <div class="card"><b class="t">Repos app / api / docs</b><p>Skills canônicas junto de cada código e da documentação.</p></div>
+  </div>
+  <div class="flow">
+    <div class="step"><b>Orquestrador roteia</b>pedido → produto → repo → skill</div><div class="arr">→</div>
+    <div class="step"><b>Skill decide</b>passos, moldes e quando parar</div><div class="arr">→</div>
+    <div class="step"><b>Script / API executa</b>Jira, Azure CLI, git, testes</div><div class="arr">→</div>
+    <div class="step"><b>Humano aprova</b>nos portões de negócio e de merge</div>
+  </div>
+  <aside class="notes">Este ato é um modelo fictício de referência, não um caso medido como os anteriores. A ideia é testar a transferência: trocamos o domínio, mantemos a arquitetura. Reparem que cada sistema continua com um papel só. O Jira responde o que fazer e em que ordem; o Azure responde onde o código está e se ele passa; os repositórios guardam código, documentação e as skills de cada contexto. O orquestrador não substitui nenhum deles: ele recebe o pedido em linguagem natural e escolhe produto, repositório, skill e ferramenta. Quando uma dessas fontes não existe ou está ambígua, a skill para e pergunta, em vez de inventar estado. Nos próximos quatro slides, uma única demanda atravessa o ciclo inteiro. Transição: ela nasce no backlog.</aside>
+</section>
+
+<!-- 23 -->
+<section>
+  <p class="kicker">Ato 6 · Demanda no Jira</p>
+  <h2>A demanda nasce estruturada: descoberta, épico e histórias</h2>
+  <div class="flow">
+    <div class="step"><b>Descoberta</b>problema, persona e evidências</div><div class="arr">→</div>
+    <div class="step"><b>Épico no Jira</b>objetivo e recorte aprovados</div><div class="arr">→</div>
+    <div class="step"><b>Histórias por molde</b>valor, aceite e prontidão</div><div class="arr">→</div>
+    <div class="step"><b>RFC / ADR</b>decisão técnica versionada em docs</div>
+  </div>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t"><code>produto-descobrir</code></b><p>Formula o problema e lista o que falta saber antes de estimar.</p></div>
+    <div class="card"><b class="t"><code>jira-epico</code> · <code>jira-historia</code></b><p>Criam épico e histórias: Como / Quero / Para, aceite Given-When-Then e Definition of Ready.</p></div>
+    <div class="card"><b class="t"><code>doc-rfc</code></b><p>Registra alternativas e a decisão técnica no repo de documentação.</p></div>
+  </div>
+  <p>Demanda-guia do ato: <b>checkout com Pix</b> (épico fictício). Portão: o PO aprova épico e histórias antes de qualquer código.</p>
+  <aside class="notes">A demanda-guia é simples de propósito: permitir checkout com Pix num produto que hoje só aceita cartão. A skill de descoberta não escreve código nem cria sprint; ela separa problema, persona e evidência do que ainda é hipótese. Depois, as skills do Jira transformam isso em épico e histórias usando molde: valor para o usuário, critérios de aceite verificáveis e Definition of Ready. Se o aceite não é testável, a história não está pronta. A RFC entra quando há decisão técnica com alternativas, por exemplo provedor de pagamento e idempotência. O portão é do PO: sem aprovação do recorte, nenhuma branch nasce. Transição: história aprovada ainda não é sprint.</aside>
+</section>
+
+<!-- 24 -->
+<section>
+  <p class="kicker">Ato 6 · Scrum</p>
+  <h2>Refinamento e planning: a sprint nasce do board, não de uma planilha</h2>
+  <div class="flow">
+    <div class="step"><b>Refinamento</b>quebrar, ligar dependências, expor riscos</div><div class="arr">→</div>
+    <div class="step"><b>Planning</b>capacidade + objetivo + seleção</div><div class="arr">→</div>
+    <div class="step"><b>Daily</b>bloqueios e desvio do objetivo</div><div class="arr">→</div>
+    <div class="step"><b>Board no Jira</b>estado único da sprint</div>
+  </div>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t"><code>scrum-refinamento</code></b><p>Propõe quebra das histórias, dependências entre app/API e riscos de integração.</p></div>
+    <div class="card"><b class="t"><code>scrum-planning</code></b><p>Usa consultas JQL versionadas como script para montar a proposta de sprint.</p></div>
+    <div class="card"><b class="t"><code>scrum-daily</code></b><p>Resume o board: bloqueados, parados há dias e risco para o objetivo.</p></div>
+  </div>
+  <p>O Jira continua sendo a fonte do estado: a skill lê, resume e propõe. Portão: o time confirma o objetivo da sprint.</p>
+  <aside class="notes">Scrum aqui não é cerimônia decorativa; é onde a cadeia encontra limite de capacidade e dependência real. No refinamento, a skill ajuda a quebrar a história do Pix no que é API, no que é app e no que é webhook, marcando dependências e riscos. Na planning, ela não decide sozinha: monta uma proposta a partir do board, da capacidade declarada pelo time e de consultas JQL que ficam versionadas como script. A daily é leitura de exceção, não status completo: o que bloqueou, o que parou e o que ameaça o objetivo. O ponto inegociável é não criar um segundo tracking em Markdown: o estado mora no Jira. Transição: sprint planejada, começa a execução.</aside>
+</section>
+
+<!-- 25 -->
+<section>
+  <p class="kicker">Ato 6 · Azure e PR</p>
+  <h2>Execução no Azure: branch, pipeline e review com portões</h2>
+  <div class="flow">
+    <div class="step"><b>Branch ligada à história</b>nome e work item do Jira</div><div class="arr">→</div>
+    <div class="step"><b>Implementação</b>skills do repo app/api + testes</div><div class="arr">→</div>
+    <div class="step"><b>Pull Request</b>template, contexto e vínculo</div><div class="arr">→</div>
+    <div class="step"><b>Pipeline</b>build, testes e qualidade</div><div class="arr">→</div>
+    <div class="step"><b>Review humano</b>aprovação antes do merge</div>
+  </div>
+  <div class="grid g3 tight">
+    <div class="card"><b class="t"><code>azure-pr-criar</code></b><p>Abre o PR com template, resumo da mudança e link para a história.</p></div>
+    <div class="card"><b class="t"><code>azure-pipeline</code></b><p>Diagnostica CI: separa falha de código, teste instável e ambiente.</p></div>
+    <div class="card"><b class="t"><code>pr-revisar</code></b><p>Avalia o diff: correção, testes, segurança, convenções do AGENTS e risco.</p></div>
+  </div>
+  <p>Portões: CI verde e revisor humano. A avaliação da IA prepara a revisão; ela não faz merge automático.</p>
+  <aside class="notes">Na execução, a rastreabilidade é mecânica: a branch nasce ligada à história, o PR usa template e aponta de volta para o Jira. As skills de implementação são as do próprio repositório, porque a convenção de API não é a mesma do app. Quando a pipeline falha, a skill de diagnóstico lê o log e classifica a falha antes de alguém sair alterando código: erro real, teste instável ou ambiente. A avaliação de PR feita pela IA é uma pré-revisão estruturada, com risco e pontos de atenção para o revisor. Ela nunca aprova no lugar dele e nunca faz merge. Transição: merged não é o fim; falta entregar e aprender.</aside>
+</section>
+
+<!-- 26 -->
+<section>
+  <p class="kicker">Ato 6 · Entrega e aprendizado</p>
+  <h2>Merge não é o fim: release, documentação, review e retro</h2>
+  <div class="grid g4 tight">
+    <div class="card"><b class="t"><code>release-notes</code></b><p>Notas da versão a partir dos PRs e histórias concluídas.</p></div>
+    <div class="card"><b class="t"><code>doc-atualizar</code></b><p>README, referência da API, runbook e ADR atualizados com a entrega.</p></div>
+    <div class="card"><b class="t"><code>scrum-review</code></b><p>Checklist da demo e aceite do PO contra os critérios da história.</p></div>
+    <div class="card"><b class="t"><code>scrum-retro</code></b><p>Ações viram história nova ou formalização nova.</p></div>
+  </div>
+  <div class="flow">
+    <div class="step"><b>Épico</b></div><div class="arr">→</div><div class="step"><b>Histórias</b></div><div class="arr">→</div><div class="step"><b>Sprint</b></div><div class="arr">→</div><div class="step"><b>Branch</b></div><div class="arr">→</div><div class="step"><b>PR + CI</b></div><div class="arr">→</div><div class="step"><b>Merge</b></div><div class="arr">→</div><div class="step"><b>Release + docs</b></div><div class="arr">→</div><div class="step"><b>Retro</b></div>
+  </div>
+  <p>Quando um atrito se repete, a retro não gera só ata: gera a próxima história, skill, molde ou script.</p>
+  <aside class="notes">O fechamento do ciclo é onde muitos projetos vazam valor: o código entra, mas a documentação fica para trás e a release vira arqueologia de PR. Aqui, release notes nascem das histórias e dos PRs vinculados; a documentação é parte da definição de pronto, não um favor posterior. A review confere a entrega contra os critérios de aceite escritos lá no começo, fechando o fio com a descoberta. E a retro tem uma saída formal: se o mesmo atrito apareceu de novo, ele vira história de melhoria ou desce um degrau e vira skill, molde ou script. É o mesmo retorno composto dos casos de RPG, agora no ciclo Scrum. Transição: fecho da apresentação.</aside>
+</section>
+
+<!-- 27 -->
 <section class="center closing">
   <p class="kicker">Encerramento</p>
   <h2 style="margin-top:1.1em">De "pedir coisas à IA" para operar um sistema com ela</h2>
   <h3 style="font-size:1.25em; margin-top:.7em">Perguntas?</h3>
-  <aside class="notes">Fecho, um minuto. O que foi construído não é uma coleção de prompts: é uma infraestrutura de colaboração entre pessoa e IA, com instruções versionadas, ferramentas determinísticas, moldes, portões e memória. O conteúdo de RPG foi o domínio; o método é transferível para qualquer projeto longo. Se a pergunta for por onde começar, a resposta curta é o slide anterior: instrução única, tracking e as skills das tarefas mais repetidas. Se for sobre escalar para equipe, a conversa é revisão em diff, porque tudo aqui é texto em git, revisável como código. Se sobrar tempo, a demonstração mais curta é abrir o AGENTS.md do hub e uma skill canônica lado a lado: os dois arquivos mostram o sistema inteiro em miniatura. Obrigado; se quiserem, abro os arquivos reais no editor.</aside>
+  <aside class="notes">Fecho, um minuto. O que foi construído não é uma coleção de prompts: é uma infraestrutura de colaboração entre pessoa e IA, com instruções versionadas, ferramentas determinísticas, moldes, portões e memória. O conteúdo de RPG foi o domínio; o método é transferível para qualquer projeto longo. Se a pergunta for por onde começar, a resposta curta está na replicação e no ato final: instrução única, tracking e as skills das tarefas mais repetidas, aplicadas ao ciclo que a equipe já usa. Se for sobre escalar para equipe, a conversa é revisão em diff, porque tudo aqui é texto em git, revisável como código. Se sobrar tempo, a demonstração mais curta é abrir o AGENTS.md do hub e uma skill canônica lado a lado: os dois arquivos mostram o sistema inteiro em miniatura. Obrigado; se quiserem, abro os arquivos reais no editor.</aside>
 </section>
 
 </div></div>
