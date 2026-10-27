@@ -12,20 +12,23 @@
   .reveal{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:#0d1117; }
   .reveal .slides section{ text-align:left; }
   .reveal h1{ font-size:2.15em; line-height:1.08; text-transform:none; letter-spacing:-.01em; }
-  .reveal h2{ font-size:1.55em; line-height:1.15; text-transform:none; color:#fff; margin-bottom:.45em; }
+  .reveal h2{ font-size:1.45em; line-height:1.15; text-transform:none; color:#fff; margin-bottom:.28em; }
   .reveal h3{ font-size:1em; text-transform:none; color:var(--amber); margin:.2em 0 .3em; }
   .reveal p, .reveal li{ font-size:.78em; line-height:1.45; }
   .reveal ul{ margin-left:1em; } .reveal li{ margin:.28em 0; }
   .reveal code{ font-family:"JetBrains Mono",Consolas,monospace; font-size:.86em; color:var(--teal); background:#131a26; padding:.05em .32em; border-radius:5px; }
-  .reveal pre{ width:100%; box-shadow:none; } .reveal pre code{ font-size:.52em; line-height:1.5; max-height:430px; color:#cfe3dc; background:#101722; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
-  .kicker{ font-size:.5em !important; letter-spacing:.28em; text-transform:uppercase; color:var(--amber); font-weight:700; margin-bottom:.6em; }
+  .reveal pre{ width:100%; box-shadow:none; margin:.35em 0; } .reveal pre code{ font-size:.52em; line-height:1.5; max-height:380px; color:#cfe3dc; background:#101722; border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .kicker{ font-size:.48em !important; letter-spacing:.28em; text-transform:uppercase; color:var(--amber); font-weight:700; margin-bottom:.4em; }
   .sub{ color:var(--mut); font-size:.85em !important; }
   .big{ font-size:1.15em !important; }
-  .grid{ display:grid; gap:16px; } .g2{ grid-template-columns:1fr 1fr; } .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
-  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; }
-  .card b.t{ display:block; font-size:.85em; color:#fff; margin-bottom:.25em; }
-  .card p{ font-size:.68em; color:var(--mut); margin:0; }
-  .tight .card{ padding:12px 14px; } .tight .card b.t{ font-size:.7em; line-height:1.25; } .tight .card p{ font-size:.6em; line-height:1.35; }
+  .lead{ color:var(--mut); font-size:.64em !important; line-height:1.3; margin:0 0 .35em; max-width:48em; }
+  .bridge{ margin-top:.4em; padding-top:.28em; border-top:1px solid var(--line); color:var(--amber); font-size:.5em !important; letter-spacing:.02em; line-height:1.3; }
+  .grid{ display:grid; gap:12px; } .g2{ grid-template-columns:1fr 1fr; } .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .card b.t{ display:block; font-size:.8em; color:#fff; margin-bottom:.2em; }
+  .card p{ font-size:.64em; color:var(--mut); margin:0; }
+  .tight .card{ padding:9px 11px; } .tight .card b.t{ font-size:.64em; line-height:1.2; } .tight .card p{ font-size:.54em; line-height:1.3; }
+  .tight{ gap:9px; }
   .num{ font-size:1.9em !important; font-weight:800; color:var(--amber); line-height:1; margin:0; }
   .num small{ font-size:.38em; color:var(--mut); font-weight:600; display:block; margin-top:.35em; letter-spacing:.04em; }
   .flow{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:.4em 0; }
@@ -40,32 +43,188 @@
   .ok{ color:var(--teal); font-weight:700; } .bad{ color:var(--red); font-weight:700; }
   .tl{ border-left:3px solid var(--line); margin-left:.3em; padding-left:1.1em; }
   .tl li{ margin:.5em 0; } .tl b{ color:var(--amber); }
-  ul.slim li{ font-size:.66em; margin:.34em 0; line-height:1.35; }
-  .nums .card{ padding:12px 16px; } .nums .num{ font-size:1.45em !important; }
+  ul.slim li{ font-size:.62em; margin:.28em 0; line-height:1.3; }
+  .nums{ gap:10px; } .nums .card{ padding:10px 12px; } .nums .num{ font-size:1.3em !important; }
+  .tl{ margin-bottom:.35em; } .tl li{ margin:.35em 0; }
   .closing .card{ padding:9px 14px; } .closing .num{ font-size:1.2em !important; } .closing h2{ font-size:1.15em; line-height:1.2; margin-bottom:.35em; }
+  .btn-restart{
+    position:fixed; left:50%; bottom:28px; z-index:41;
+    transform:translateX(-50%);
+    width:64px; height:64px; padding:0; margin:0;
+    display:none; align-items:center; justify-content:center;
+    border:none; border-radius:50%;
+    background:rgba(13,17,23,.65);
+    box-shadow:0 0 0 1.5px rgba(232,179,75,.45);
+    color:var(--amber); cursor:pointer;
+    opacity:.92;
+    transition:opacity .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-restart.is-visible{ display:flex; }
+  .btn-restart::after{
+    content:""; display:block; width:22px; height:22px;
+    background-color:currentColor;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 5V2L7 7l5 5V9c2.76 0 5 2.24 5 5a5 5 0 0 1-9.9 1h-2.02A7 7 0 0 0 19 14c0-3.87-3.13-7-7-7z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 5V2L7 7l5 5V9c2.76 0 5 2.24 5 5a5 5 0 0 1-9.9 1h-2.02A7 7 0 0 0 19 14c0-3.87-3.13-7-7-7z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .btn-restart:hover, .btn-restart:focus-visible{
+    opacity:1; outline:none;
+    background:rgba(13,17,23,.85);
+    box-shadow:0 0 0 2px var(--amber);
+  }
   .ato6 h2{ font-size:1.28em; margin-bottom:.35em; }
   .ato6 .flow{ margin:.3em 0; } .ato6 .flow .step{ padding:8px 10px; }
   .ato6 .tight .card{ padding:9px 11px; } .ato6 .tight .card b.t{ font-size:.62em; } .ato6 .tight .card p{ font-size:.54em; line-height:1.3; }
   .ato6 .sub{ font-size:.72em !important; }
+  .ato6 .lead{ font-size:.68em !important; margin-bottom:.5em; }
   .center{ text-align:center !important; } .center ul{ display:inline-block; text-align:left; }
-  .tag{ display:inline-block; background:#22304a; color:#bcd2ff; border-radius:20px; padding:.12em .7em; font-size:.58em; margin:.15em .1em; }
+  .tag{ display:inline-block; background:transparent; color:#7a8499; border:none; border-bottom:1px solid #3d4558; border-radius:0; padding:.05em .15em .08em; font-size:.55em; margin:.15em .45em .15em 0; cursor:default; pointer-events:none; letter-spacing:.04em; }
   .foot{ position:absolute; bottom:-46px; left:0; font-size:.42em; color:#5c6270; }
   .reveal .slide-number{ color:#5c6270; background:transparent; }
   .quote{ border-left:4px solid var(--amber); padding-left:.8em; font-style:italic; color:#d8d4c8; font-size:.62em !important; }
 
+  /* Lista numerada (quebra: problema) */
+  .prob-list{ list-style:none; margin:.15em 0 0; padding:0; }
+  .prob-list li{ display:grid; grid-template-columns:3em 1fr; gap:12px; align-items:start; margin:0 0 .45em; padding:11px 14px; border:1px solid var(--line); border-radius:12px; background:transparent; }
+  .prob-list .n{ font-size:1.2em; font-weight:800; color:var(--amber); line-height:1; padding-top:.1em; }
+  .prob-list b{ display:block; font-size:.78em; color:#fff; margin-bottom:.15em; }
+  .prob-list p{ font-size:.64em; color:var(--mut); margin:0; line-height:1.35; }
+
+  /* Famílias em duas colunas (quebra: catálogo) */
+  .fam-list{ display:grid; grid-template-columns:1fr 1fr; gap:4px 24px; margin:.1em 0 0; padding:0; list-style:none; }
+  .fam-list li{ display:grid; grid-template-columns:9.5em 1fr; gap:10px; align-items:baseline; padding:.28em 0; border-bottom:1px solid var(--line); font-size:.62em; line-height:1.3; }
+  .fam-list b{ color:#fff; font-weight:700; }
+  .fam-list span{ color:var(--mut); }
+
+  /* Passos de replicação: grelha 2×3 (usa largura, não esgota a altura) */
+  .ladder{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; list-style:none; margin:.25em 0 0; padding:0; }
+  .ladder li{ display:grid; grid-template-columns:2.2em 1fr; gap:10px; align-items:start; margin:0; padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:transparent; }
+  .ladder li.priority{ border-color:rgba(232,179,75,.55); background:rgba(232,179,75,.06); }
+  .ladder .n{ font-size:1.15em; font-weight:800; color:var(--amber); line-height:1.1; }
+  .ladder b{ display:block; font-size:.72em; color:#fff; margin-bottom:.12em; }
+  .ladder p{ font-size:.58em; color:var(--mut); margin:0; line-height:1.3; }
+
+  /* Callout sob código */
+  .callout{ margin-top:.4em; padding:8px 12px; border-left:3px solid var(--teal); background:#121820; border-radius:0 8px 8px 0; font-size:.58em !important; color:var(--mut); line-height:1.35; }
+  .callout b{ color:var(--teal); }
+
+  /* Abertura Ato 6: thesis + faixa */
+  .thesis{ text-align:center; margin:.1em 0 .55em; }
+  .thesis h2{ text-align:center; }
+  .thesis .lead{ margin-left:auto; margin-right:auto; text-align:center; }
+  .role-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:.3em; }
+  .role-strip .role{ text-align:center; padding:12px 8px; border:1px solid var(--line); border-radius:10px; background:transparent; }
+  .role-strip .role b{ display:block; font-size:.68em; color:#fff; margin-bottom:.2em; }
+  .role-strip .role p{ font-size:.52em; color:var(--mut); margin:0; line-height:1.3; }
+
+  /* Controles Reveal: overlay full-viewport (sem transform no aside —
+     transform no pai quebra position dos filhos). Setas laterais grandes. */
+  .reveal .controls{
+    color:var(--amber);
+    position:fixed !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    top:0 !important; right:0 !important; bottom:0 !important; left:0 !important;
+    transform:none !important;
+    pointer-events:none;
+    z-index:40;
+  }
+  /* Setas: círculo + chevron CSS (bordas), centrado de forma geométrica. */
+  .reveal .controls button{
+    pointer-events:auto;
+    width:64px !important;
+    height:64px !important;
+    opacity:.92 !important;
+    margin:0 !important;
+    padding:0 !important;
+    border-radius:50%;
+    background:rgba(13,17,23,.65) !important;
+    box-shadow:0 0 0 1.5px rgba(232,179,75,.45);
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+  }
+  .reveal .controls .controls-arrow{
+    display:none !important;
+  }
+  .reveal .controls .navigate-left::after,
+  .reveal .controls .navigate-right::after{
+    content:"";
+    display:block;
+    width:22px;
+    height:22px;
+    flex-shrink:0;
+    background-color:var(--amber);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9.3 5.3a1 1 0 0 1 1.4 0l6 6a1 1 0 0 1 0 1.4l-6 6a1 1 0 1 1-1.4-1.4L14.58 12 9.3 6.7a1 1 0 0 1 0-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9.3 5.3a1 1 0 0 1 1.4 0l6 6a1 1 0 0 1 0 1.4l-6 6a1 1 0 1 1-1.4-1.4L14.58 12 9.3 6.7a1 1 0 0 1 0-1.4z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .reveal .controls .navigate-left::after{
+    transform:scaleX(-1);
+  }
+  .reveal .controls .navigate-left,
+  .reveal .controls .navigate-right{
+    position:absolute !important;
+    top:50% !important;
+    bottom:auto !important;
+  }
+  .reveal .controls .navigate-left{
+    left:36px !important; right:auto !important;
+    transform:translateY(-50%);
+  }
+  .reveal .controls .navigate-right{
+    right:36px !important; left:auto !important;
+    transform:translateY(-50%);
+  }
+  .reveal .controls .navigate-up,
+  .reveal .controls .navigate-down{ display:none !important; }
+  .reveal .controls .navigate-right.enabled{
+    animation:nudge-right 2.2s ease-in-out infinite;
+  }
+  .reveal .controls .navigate-left.enabled{
+    animation:nudge-left 2.2s ease-in-out infinite;
+  }
+  @keyframes nudge-right{
+    0%,100%{ transform:translateY(-50%) translateX(0); opacity:.78; }
+    50%{ transform:translateY(-50%) translateX(10px); opacity:1; }
+  }
+  @keyframes nudge-left{
+    0%,100%{ transform:translateY(-50%) translateX(0); opacity:.78; }
+    50%{ transform:translateY(-50%) translateX(-10px); opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal .controls .navigate-right.enabled,
+    .reveal .controls .navigate-left.enabled{ animation:none; }
+  }
+
   /* Mobile (retrato): vale para a visualização de rolagem do Reveal */
   @media (max-width: 700px){
     html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; overflow-x:clip; }
-    /* Rolagem contínua: a página cresce com o conteúdo em vez de cortá-lo
-       na altura da viewport (comportamento padrão da scroll view).
-       Seletores longos para vencer as regras !important do próprio Reveal. */
     .reveal .slides{ width:100% !important; max-width:100% !important; }
     .reveal .slides .scroll-page{ height:auto !important; min-height:0 !important; width:100% !important; max-width:100% !important; }
     .reveal .slides .scroll-page .scroll-page-sticky{ position:relative !important; height:auto !important; top:auto !important; }
     .reveal .slides .scroll-page .scroll-page-content{ position:relative !important; height:auto !important; overflow:visible !important; width:100% !important; max-width:100% !important; }
     .reveal .slides .scroll-page .scroll-page-content>section{ position:relative !important; transform:none !important; width:100% !important; max-width:100% !important; height:auto !important; top:auto !important; left:auto !important; padding:28px 20px 64px; box-sizing:border-box; }
     .reveal pre code{ box-sizing:border-box; }
-    .reveal .controls, .reveal .slide-number{ z-index:30; }
+    .reveal .controls, .reveal .slide-number{ z-index:40; }
+    /* Em scroll/mobile: setas no rodapé, lado a lado, sem nudge */
+    .reveal .controls{
+      position:fixed !important; inset:auto !important;
+      left:0 !important; right:0 !important; bottom:12px !important; top:auto !important;
+      width:100% !important; height:auto !important;
+      display:flex !important; justify-content:center; gap:18px;
+      transform:none !important; pointer-events:none;
+    }
+    .reveal .controls .navigate-left,
+    .reveal .controls .navigate-right{
+      position:static !important; transform:none !important;
+      animation:none !important; pointer-events:auto;
+    }
+    .reveal .controls button{ width:52px !important; height:52px !important; opacity:.92 !important; }
+    .reveal .controls .navigate-left::after,
+    .reveal .controls .navigate-right::after{ width:18px; height:18px; }
+    .btn-restart{ width:52px; height:52px; bottom:78px; }
+    .btn-restart::after{ width:18px; height:18px; }
+    .reveal .progress{ height:4px; }
     .reveal h1{ font-size:1.5em; line-height:1.12; }
     .reveal h2, .ato6 h2{ font-size:1.08em; line-height:1.2; }
     .reveal h3{ font-size:.8em; }
@@ -73,12 +232,19 @@
     .kicker{ font-size:.42em !important; }
     .big{ font-size:.95em !important; }
     .sub{ font-size:.8em !important; }
+    .lead{ font-size:.62em !important; }
+    .bridge{ font-size:.52em !important; }
     .reveal p, .reveal li{ font-size:.6em; line-height:1.5; overflow-wrap:break-word; }
     .reveal ul{ margin-left:.35em; }
     .tl{ margin-left:0; padding-left:.8em; }
     .tl li{ overflow-wrap:anywhere; }
     .grid.g2, .grid.g3, .grid.g4{ grid-template-columns:1fr; gap:10px; }
     .grid.nums{ grid-template-columns:1fr 1fr; }
+    .fam-list{ grid-template-columns:1fr; gap:0; }
+    .fam-list li{ grid-template-columns:1fr; gap:2px; }
+    .ladder{ grid-template-columns:1fr; gap:8px; }
+    .role-strip{ grid-template-columns:1fr 1fr; }
+    .prob-list li{ grid-template-columns:2.4em 1fr; gap:10px; padding:12px; }
     .card{ padding:14px 16px; }
     .card p{ font-size:.6em; }
     .tight .card{ padding:11px 13px; }
@@ -95,6 +261,7 @@
     .nums .num{ font-size:1.25em !important; }
     .tag{ font-size:.68em; }
     .closing h2{ font-size:1.05em; }
+    .callout{ font-size:.58em !important; }
   }
 </style>
 </head>
@@ -106,7 +273,9 @@
   <p class="kicker">Hub TTRPG · Skills de IA · Estudo de caso técnico</p>
   <h1>Como o hub TTRPG foi construído com skills de IA</h1>
   <p class="big sub">Otimizando desenvolvimento de apps e de conteúdo com skills, scripts facilitadores e memória de projeto.</p>
+  <p class="lead">Em meia hora: o problema, a arquitetura, as skills, os scripts e os casos reais — e o que disso se leva para outro projeto.</p>
   <p><span class="tag">Cursor</span><span class="tag">Claude</span><span class="tag">Gemini</span><span class="tag">Trae</span><span class="tag">Obsidian</span><span class="tag">Next.js</span></p>
+  <p class="bridge">Começamos pelo problema que esse sistema resolve.</p>
   <aside class="notes">Abertura, um minuto. Isto não é uma palestra sobre prompts: é o relato de um sistema construído para a IA trabalhar como parte do projeto, com manual versionado, ferramentas próprias e memória entre sessões. O domínio é RPG de mesa, mas o que interessa aqui é a infraestrutura que nasceu dele. São cinco atos em meia hora: problema e arquitetura, skills, scripts e moldes, casos reais e lições transferíveis. Todos os números citados foram contados nos repositórios nesta semana, com busca de arquivos e histórico do git, nada é estimativa de memória. Setas navegam e a tecla S abre estas notas. Um aviso de método: o estudo de caso é verificável, porque os arquivos citados estão no vault e nos repositórios e podem ser abertos ao vivo se alguém quiser conferir uma afirmação específica. Transição: comecemos pelo problema que esse sistema resolve.</aside>
 </section>
 
@@ -114,11 +283,12 @@
 <section>
   <p class="kicker">Ato 1 · O problema</p>
   <h2>O problema: a IA esquecia tudo a cada sessão</h2>
-  <div class="grid g3">
-    <div class="card"><b class="t">Conteúdo disperso</b><p>Campanhas, regras, PDFs e dois webapps em repositórios separados, sem mapa comum.</p></div>
-    <div class="card"><b class="t">Tarefas repetitivas</b><p>Converter, narrar, sincronizar, migrar: trabalho manual, um repo e um comando por vez.</p></div>
-    <div class="card"><b class="t">Qualidade sem padrão</b><p>Sem molde, cada ficha, ameaça ou aventura nascia num formato.</p></div>
-  </div>
+  <p class="lead">O gargalo não era a IA saber responder. Era contexto: onde agir, com que regra, com que ferramenta — e o que a sessão anterior já tinha feito.</p>
+  <ol class="prob-list">
+    <li><span class="n">01</span><div><b>Conteúdo disperso</b><p>Campanhas, regras, PDFs e dois webapps em repositórios separados, sem mapa comum.</p></div></li>
+    <li><span class="n">02</span><div><b>Tarefas repetitivas</b><p>Converter, narrar, sincronizar, migrar: trabalho manual, um repo e um comando por vez.</p></div></li>
+    <li><span class="n">03</span><div><b>Qualidade sem padrão</b><p>Sem molde, cada ficha, ameaça ou aventura nascia num formato.</p></div></li>
+  </ol>
   <aside class="notes">O gargalo nunca foi a IA saber responder. Era contexto: ela não sabia onde agir, não conhecia as convenções, não tinha ferramenta pronta e não lembrava a sessão anterior. São quatro faltas, e cada ato desta apresentação responde a uma delas. Exemplos concretos: reexplicar o formato de uma ficha, lembrar em qual dos oito repositórios está um arquivo, reconstruir de cabeça o comando certo de migração. Nenhum desses custos aparece num orçamento, mas somados eles comem a sessão de trabalho. A pergunta que guiou tudo foi: como fazer esse contexto morar no projeto, e não na cabeça de quem pede? Um custo invisível merece nome: quando o agente edita no repositório errado, o erro só aparece depois, ao sincronizar ou publicar, e o retrabalho custa mais que a tarefa original. Transição: a resposta começa pela arquitetura.</aside>
 </section>
 
@@ -126,6 +296,7 @@
 <section>
   <p class="kicker">Ato 1 · Arquitetura</p>
   <h2>A resposta: um hub que funciona como monorepo virtual</h2>
+  <p class="lead">Em vez de fundir tudo ou deixar tudo solto: uma camada fina de orquestração sobre repositórios independentes.</p>
   <div class="flow">
     <div class="step"><b>Obsidian na raiz</b>vault único, wikilinks entre todos os repos</div><div class="arr">→</div>
     <div class="step"><b>repos.manifest.json</b>catálogo declarativo dos filhos</div><div class="arr">→</div>
@@ -140,6 +311,7 @@
 <section>
   <p class="kicker">Ato 1 · Ecossistema</p>
   <h2>Mapa do ecossistema: 8 repos, papéis distintos</h2>
+  <p class="lead">Com o hub no lugar, o mapa precisa de donos claros: cada repositório cabe numa frase — e isso diz à IA onde uma mudança pertence.</p>
   <div class="grid g4 tight">
     <div class="card"><b class="t">ordem-paranormal-desespero</b><p>Conteúdo OPRPG: campanhas e referências.</p></div>
     <div class="card"><b class="t">shadowdarkrpg-fantasia</b><p>Shadowdark de mesa + referências DnD.</p></div>
@@ -157,6 +329,7 @@
 <section>
   <p class="kicker">Ato 1 · Evolução e escala</p>
   <h2>Evolução e escala (medido em 20/10/2026)</h2>
+  <p class="lead">A linha do tempo importa menos pelas datas e mais pela aceleração: o projeto mais recente herdou skills, moldes e gates dos anteriores.</p>
   <ul class="tl slim">
     <li><b>2025-04</b> — nasce o vault OPRPG</li>
     <li><b>2025-07 → 11</b> — public-rpg-repo e Cyberpunk RED entram no conjunto</li>
@@ -171,6 +344,7 @@
     <div class="card"><p class="num">93<small>arquivos de teste nos dois PWAs</small></p></div>
     <div class="card"><p class="num">2<small>PWAs publicados a partir dos vaults</small></p></div>
   </div>
+  <p class="bridge">Falta o mecanismo. Ele começa pela skill.</p>
   <aside class="notes">A leitura importante da linha do tempo não é a data, é a aceleração. O projeto mais recente é o que nasceu mais rápido e mais testado, porque herdou skills, moldes, scripts e gates dos anteriores. Essa é a tese da apresentação demonstrada pelo próprio histórico: cada camada nova reaproveita a infraestrutura das anteriores. Os quatro números da grade são os que valem guardar: skills, conteúdo, testes e produtos publicados; o restante da apresentação explica como eles se produzem mutuamente. A contagem veio de busca de arquivos e de git log em cada repositório. Metodologia em uma frase: skills contam-se pelos arquivos canônicos, conteúdo pelos Markdown fora dos modelos, testes pelos arquivos de teste dos dois apps, tudo na mesma data de medição, para os números serem repetíveis por quem quiser auditar. Transição: falta o mecanismo, e ele começa pela skill.</aside>
 </section>
 
@@ -178,6 +352,7 @@
 <section>
   <p class="kicker">Ato 2 · Skills</p>
   <h2>O que é uma skill: procedimento versionado, carregado sob demanda</h2>
+  <p class="lead">Com o mapa e a escala na mão: a skill é o procedimento que a IA carrega só quando o pedido combina — revisável em diff, não solto num prompt.</p>
   <pre><code>---
 name: shadowdark-ameaca
 description: >-
@@ -189,7 +364,7 @@ description: >-
 
 # shadowdark-ameaca
 ## Quando usar cada modo …   (corpo: passos, guardrails, exemplos)</code></pre>
-  <p>A <code>description</code> é o gatilho: é ela que faz o agente escolher a skill certa sem ninguém pedir pelo nome.</p>
+  <p class="callout"><b>Gatilho:</b> a <code>description</code> faz o agente escolher a skill certa sem ninguém pedir pelo nome.</p>
   <aside class="notes">Anatomia mínima: frontmatter com nome e descrição-gatilho, corpo com procedimento. A skill é um arquivo no repositório, revisável em diff e com histórico, não um conhecimento solto num prompt de chat. Reparem na redação da descrição: ela lista os sinônimos do pedido real, monstro, encontro, orçamento, ficha, porque é escrita para casar com a linguagem de quem pede, não com o nome interno. Descrição ruim, a skill certa nunca dispara; descrição ampla demais, dispara fora de hora. E ela só é carregada quando o pedido combina: contexto sob demanda, não um prompt gigante permanente. Detalhe de ofício: o corpo da skill manda ler arquivos de referência só quando o modo escolhido exige, então exemplos longos não pesam em toda conversa, só na tarefa que realmente os usa. Transição: onde essas skills moram?</aside>
 </section>
 
@@ -197,6 +372,7 @@ description: >-
 <section>
   <p class="kicker">Ato 2 · Arquitetura de skills</p>
   <h2>Três camadas: canônica, proxy, symlink</h2>
+  <p class="lead">A skill precisa morar com o conteúdo — e o hub só publica um índice, sem copiar o corpo.</p>
   <div class="flow">
     <div class="step"><b>1 · Canônica no filho</b><code>repos/shadowdarkrpg-fantasia/skills/shadowdark-ameaca/SKILL.md</code>, mora com o conteúdo</div><div class="arr">→</div>
     <div class="step"><b>2 · Proxy fino no hub</b><code>.cursor/skills/fantasia/&lt;slug&gt;/</code>, só aponta para a canônica</div><div class="arr">→</div>
@@ -211,6 +387,7 @@ description: >-
 <section>
   <p class="kicker">Ato 2 · Multi-agente</p>
   <h2>Uma fonte, várias IAs: AGENTS.md + stubs</h2>
+  <p class="lead">A mesma lógica de fonte única vale para as instruções: um manual por repo, vários leitores de IA.</p>
   <pre><code># CLAUDE.md / GEMINI.md / TRAE.md  (em cada repo)
 @AGENTS.md</code></pre>
   <div class="grid g3">
@@ -225,6 +402,7 @@ description: >-
 <section>
   <p class="kicker">Ato 2 · Roteamento</p>
   <h2>O hub como orquestrador: cada pedido cai no lugar certo</h2>
+  <p class="lead">Com o manual único, o hub resolve o que a pessoa não precisa dizer: repo, skill e comando a partir da linguagem natural.</p>
   <table class="cmp small">
     <tr><th>Pedido típico</th><th>Repo alvo</th><th>Skill / fluxo</th></tr>
     <tr><td>"Cria uma ameaça para a Floresta das Aranhas"</td><td>shadowdarkrpg-fantasia</td><td><code>shadowdark-ameaca</code> + <code>AmeacaModelo.md</code></td></tr>
@@ -240,14 +418,16 @@ description: >-
 <section>
   <p class="kicker">Ato 2 · Catálogo</p>
   <h2>Catálogo vivo: seis famílias de skills</h2>
-  <div class="grid g3 tight">
-    <div class="card"><b class="t">Book-skills</b><p>Livros e suplementos viram skills consultáveis sob demanda.</p></div>
-    <div class="card"><b class="t">Tabelas roláveis</b><p><code>*-tabelas</code>: consultar e executar a tabela, não só ler.</p></div>
-    <div class="card"><b class="t">Workflow de conteúdo</b><p>Criar artefatos com molde e critério verificável.</p></div>
-    <div class="card"><b class="t">Workflow de app</b><p>O ciclo dos PWAs, do desenvolvimento ao gate de entrega.</p></div>
-    <div class="card"><b class="t">Estilo e qualidade</b><p>Prosa e revisão, com a voz manual do autor acima das regras.</p></div>
-    <div class="card"><b class="t">Meta-skills</b><p>Skills que criam e governam outras skills e scripts.</p></div>
-  </div>
+  <p class="lead">Roteamento só funciona se o catálogo tiver família, dono e precedência — não só uma lista longa.</p>
+  <ul class="fam-list">
+    <li><b>Book-skills</b><span>Livros e suplementos viram skills consultáveis sob demanda.</span></li>
+    <li><b>Tabelas roláveis</b><span><code>*-tabelas</code>: consultar e executar a tabela, não só ler.</span></li>
+    <li><b>Workflow de conteúdo</b><span>Criar artefatos com molde e critério verificável.</span></li>
+    <li><b>Workflow de app</b><span>O ciclo dos PWAs, do desenvolvimento ao gate de entrega.</span></li>
+    <li><b>Estilo e qualidade</b><span>Prosa e revisão, com a voz manual do autor acima das regras.</span></li>
+    <li><b>Meta-skills</b><span>Skills que criam e governam outras skills e scripts.</span></li>
+  </ul>
+  <p class="bridge">Procedimento sem ferramenta determinística ainda improvisa. Entramos nos scripts.</p>
   <aside class="notes">Não tentem memorizar a lista; reparem nas famílias e na precedência. As tabelas roláveis transformam leitura em execução: pedir um encontro executa a tabela em vez de só mostrá-la. As skills de estilo têm hierarquia declarada, e a edição manual do autor fica acima delas. O destaque é a família meta: existe uma skill cuja função é fabricar outras a partir de livros, extraindo capítulos sob demanda em vez de despejar o livro inteiro no contexto. O sistema se expande usando o próprio sistema. Os casos concretos de cada família aparecem nos próximos atos. Em uma frase: catálogo bom não é lista longa, é lista com família, dono e precedência, para o agente saber não só o que existe, mas o que vale primeiro quando duas skills combinam com o mesmo pedido. Transição: procedimento sem ferramenta determinística ainda improvisa; entramos nos scripts.</aside>
 </section>
 
@@ -255,6 +435,7 @@ description: >-
 <section>
   <p class="kicker">Ato 3 · Caso: sync</p>
   <h2>Skill decide, script executa: sincronizar 8 repos num comando</h2>
+  <p class="lead">O padrão do hub: julgamento na skill, determinismo no script, segurança nas regras dos dois.</p>
   <pre><code># cwd = raiz do hub
 ./scripts/sync_repos/sync_repos.sh --status
 ./scripts/sync_repos/sync_repos.sh --msg hub="…" -y   # uma --msg por repo sujo</code></pre>
@@ -270,6 +451,7 @@ description: >-
 <section>
   <p class="kicker">Ato 3 · Instalação em cadeia</p>
   <h2>Bootstrap: do clone do hub ao workspace completo</h2>
+  <p class="lead">O sync assume clones no lugar. O bootstrap é o que transforma “meu workspace” em workspace reproduzível.</p>
   <pre><code>git clone …/ttrpg.git && cd ttrpg
 ./scripts/bootstrap.sh                        # todos os filhos do manifest
 ./scripts/bootstrap.sh --only bg3-fan4fun     # só um repo
@@ -282,6 +464,7 @@ description: >-
 <section>
   <p class="kicker">Ato 3 · Governança</p>
   <h2>Script novo não nasce sem aprovação: a skill hub-scripts</h2>
+  <p class="lead">Ferramenta nova também precisa de portão: sem ele, todo projeto com IA vira pasta de scripts órfãos.</p>
   <div class="flow">
     <div class="step"><b>Parar</b>antes de gravar qualquer .py/.sh novo</div><div class="arr">→</div>
     <div class="step"><b>Perguntar</b>AskQuestion com nome, o que faz e tecnologias</div><div class="arr">→</div>
@@ -297,6 +480,7 @@ description: >-
 <section>
   <p class="kicker">Ato 3 · Pipelines</p>
   <h2>Pipelines de conversão encadeados</h2>
+  <p class="lead">Com scripts governados, a composição vem por formato: cada CLI faz uma coisa e encaixa na próxima.</p>
   <div class="flow">
     <div class="step"><b>pdf_to_md</b>PDF → Markdown Obsidian (OCR híbrido, wikilinks)</div><div class="arr">→</div>
     <div class="step"><b>md_to_txt</b>Markdown → texto limpo para narração</div><div class="arr">→</div>
@@ -314,6 +498,7 @@ description: >-
 <section>
   <p class="kicker">Ato 3 · Modelos de conteúdo</p>
   <h2>Modelos de estrutura: a IA preenche o molde, não inventa o formato</h2>
+  <p class="lead">Ferramenta resolve repetição de comando. Molde resolve repetição de formato — a forma mais barata de qualidade entre sessões.</p>
   <div class="grid g3 tight">
     <div class="card"><b class="t">FichaModelo.md</b><p>Ficha de personagem Shadowdark, usada pela skill <code>shadowdark-personagem</code>.</p></div>
     <div class="card"><b class="t">AmeacaModelo.md</b><p>Dois modos: ficha avulsa completa ou verbete de Bestiário enxuto; a skill escolhe, o molde fixa o formato.</p></div>
@@ -322,6 +507,7 @@ description: >-
     <div class="card"><b class="t">Templates BG3 de mesa</b><p>Fichas de desafio, inimigo, item e personagem em <code>templates/mesa/</code>.</p></div>
     <div class="card"><b class="t">Templates de registro BG3</b><p>Progresso, catálogos, estado e decisões com molde próprio.</p></div>
   </div>
+  <p class="bridge">Agora tudo isso operando junto: conteúdo, app e pipeline com portões.</p>
   <aside class="notes">Molde é a forma mais barata de qualidade: separa o que é formato, fixo no arquivo, do que é criação, variável a cada uso. O efeito colateral é consistência entre dezenas de arquivos escritos em sessões e por agentes diferentes. O molde também carrega decisão, não só campos: o de aventura declara que o padrão é gerar só o esqueleto, protegendo o autor de receber dez páginas quando pediu uma estrutura; o de ameaça documenta quando usar cada modo. E o último cartão adianta o tema do tracking: até a memória do projeto tem molde. Quando um artefato sai fora do padrão, a correção é no molde ou na skill, uma única vez, e não arquivo a arquivo: é assim que o padrão melhora com o uso em vez de degradar. Transição: vejamos tudo isso operando junto.</aside>
 </section>
 
@@ -329,6 +515,7 @@ description: >-
 <section>
   <p class="kicker">Ato 4 · Caso Fantasia</p>
   <h2>Criação de conteúdo como linha de produção</h2>
+  <p class="lead">Skills, scripts e moldes encadeados: cada elo consome a saída do anterior — campanha → aventura → local → ameaça → orçamento.</p>
   <div class="flow">
     <div class="step"><b>fantasia-campanha</b>lore e continuidade do Mundo Fraturado</div><div class="arr">→</div>
     <div class="step"><b>fantasia-aventura</b>esqueleto A0N a partir do AventuraModelo</div><div class="arr">→</div>
@@ -344,6 +531,7 @@ description: >-
 <section>
   <p class="kicker">Ato 4 · Vault → App</p>
   <h2>Do Markdown ao PWA: dois Escudos, o mesmo fluxo</h2>
+  <p class="lead">Do vault para o app: editar MD, migrar, testar, publicar — o JSON não é a fonte.</p>
   <div class="flow">
     <div class="step"><b>Editar MD no vault</b>Fonte única do conteúdo</div><div class="arr">→</div>
     <div class="step"><b>yarn migrate:from-*</b>16 migradores geram o JSON</div><div class="arr">→</div>
@@ -366,6 +554,7 @@ description: >-
 <section>
   <p class="kicker">Ato 4 · Caso BG3</p>
   <h2>BG3 → mesa de RPG: um pipeline de 8 etapas com portões</h2>
+  <p class="lead">Conteúdo longo precisa de pipeline com parada humana: a rota narrativa nunca é escolhida em silêncio.</p>
   <div class="flow">
     <div class="step"><b>catalogar</b></div><div class="arr">→</div><div class="step"><b>coordenar</b></div><div class="arr">→</div>
     <div class="step"><b>pesquisar</b></div><div class="arr">→</div><div class="step"><b>perguntar</b></div>
@@ -379,13 +568,14 @@ description: >-
     <div class="card"><b class="t">Classificação da informação</b><p>Toda afirmação é <code>FATO_WIKI</code>, <code>REGRA_DND5E</code>, <code>ADAPTACAO_PROJETO</code>, <code>INFERENCIA</code> ou <code>LACUNA</code>.</p></div>
     <div class="card"><b class="t">Portão de decisão</b><p>Em "perguntar", o agente para e apresenta as decisões materiais; rota narrativa nunca é escolhida em silêncio.</p></div>
   </div>
-  <aside class="notes">Transformar um videogame de centenas de horas numa campanha jogável é um problema de engenharia de conteúdo. A ordem do pipeline impõe as separações: pesquisar produz um dossiê só com fatos, sem mecânica; adaptar só começa depois da decisão do autor; auditar confere fidelidade, regras e balanceamento antes da aprovação. A etapa "perguntar" é a mais incomum: a skill obriga o agente a parar, sem permissão estrutural para decidir sozinho. E a classificação da informação garante que inferência nunca se disfarque de fato. Cada etapa tem uma skill dona e um artefato nomeado. A auditoria usa uma rubrica editorial registrada, então aprovar não é uma impressão do momento: é uma decisão com critério anotado, que o tracking guarda junto do estado de cada unidade produzida. Transição: um projeto assim só anda com memória explícita.</aside>
+  <aside class="notes">Transformar um videogame de centenas de horas numa campanha jogável é um problema de engenharia de conteúdo. A ordem do pipeline impõe as separações: pesquisar produz um dossiê só com fatos, sem mecânica; adaptar só começa depois da decisão do autor; auditar confere fidelidade, regras e balanceamento antes da aprovação. A etapa "perguntar" é a mais incomum: a skill obriga o agente a parar, sem permissão estrutural para decidir sozinho. E a classificação da informação garante que inferência nunca se disfarce de fato. Cada etapa tem uma skill dona e um artefato nomeado. A auditoria usa uma rubrica editorial registrada, então aprovar não é uma impressão do momento: é uma decisão com critério anotado, que o tracking guarda junto do estado de cada unidade produzida. Transição: um projeto assim só anda com memória explícita.</aside>
 </section>
 
 <!-- 19 -->
 <section>
   <p class="kicker">Ato 4 · Tracking</p>
   <h2>Tracking como memória: nenhuma sessão começa do zero</h2>
+  <p class="lead">Pipeline longo sem memória volta ao slide 2. O estado mora em arquivo — não no histórico do chat.</p>
   <pre><code>## A — Onde paramos
 | etapa_fluxo        | registrar                              |
 | regiao             | A1-WIL (próxima na ordem de produção)  |
@@ -397,6 +587,7 @@ description: >-
     <div class="card"><b class="t">Skill dedicada</b><p><code>track-bg3-production</code>: obrigatória ao iniciar, pausar e encerrar a sessão.</p></div>
     <div class="card"><b class="t">Templates prontos</b><p>Até o estado futuro já nasce estruturado, sem inventar fatos para preencher.</p></div>
   </div>
+  <p class="bridge">O que muda na prática? Antes e depois, tarefa por tarefa.</p>
   <aside class="notes">Este é o antídoto direto para o problema do segundo slide. O trecho na tela responde em segundos onde estamos, em que etapa do fluxo, qual é o próximo passo e se há bloqueio, inclusive nomeando a skill que executa o próximo passo. O estado do projeto mora em arquivos, não no histórico do chat: trocar de agente ou voltar um mês depois custa a leitura de um arquivo. A regra de ouro é nunca criar fatos para inicializar um arquivo vazio; estado vazio declarado vale mais que estado inventado bonito. Para projetos longos com IA, esta é provavelmente a prática de maior retorno. Os registros são deliberadamente legíveis por pessoas e por agentes ao mesmo tempo: nada de banco de dados ou ferramenta proprietária entre a memória do projeto e quem precisa consultá-la numa segunda-feira qualquer. Transição: o que tudo isso muda na prática?</aside>
 </section>
 
@@ -404,6 +595,7 @@ description: >-
 <section>
   <p class="kicker">Ato 5 · Antes / depois</p>
   <h2>Antes e depois, tarefa por tarefa</h2>
+  <p class="lead">O ganho não é um salto de inteligência. É a eliminação sistemática da fricção repetida.</p>
   <table class="cmp small">
     <tr><th>Tarefa</th><th>Antes</th><th>Depois</th></tr>
     <tr><td>Sincronizar repos</td><td class="bad">git manual em 8 diretórios</td><td class="ok">1 pedido → skill + sync_repos com relatório</td></tr>
@@ -419,37 +611,33 @@ description: >-
 <section>
   <p class="kicker">Ato 5 · Replicação</p>
   <h2>Como replicar em outro projeto: 6 passos</h2>
-  <div class="flow">
-    <div class="step"><b>1 · AGENTS.md por repo</b>+ stubs para cada IA</div><div class="arr">→</div>
-    <div class="step"><b>2 · Mapa declarativo</b>manifest dos subprojetos</div><div class="arr">→</div>
-    <div class="step"><b>3 · Skills com dono</b>canônica no conteúdo, índice na raiz</div><div class="arr">→</div>
-    <div class="step"><b>4 · Moldes</b>um por artefato repetido</div><div class="arr">→</div>
-    <div class="step"><b>5 · Scripts governados</b>aprovação e catálogo</div><div class="arr">→</div>
-    <div class="step"><b>6 · Tracking</b>estado lido primeiro em toda sessão</div>
-  </div>
-  <p>Comece pelo passo 6 se só puder fazer um: memória entre sessões muda tudo o resto.</p>
+  <p class="lead">Nada disso depende de RPG. Se só puder fazer um, comece pelo 6 — memória entre sessões muda o resto.</p>
+  <ol class="ladder">
+    <li><span class="n">1</span><div><b>AGENTS.md por repo</b><p>+ stubs para cada IA</p></div></li>
+    <li><span class="n">2</span><div><b>Mapa declarativo</b><p>manifest dos subprojetos</p></div></li>
+    <li><span class="n">3</span><div><b>Skills com dono</b><p>canônica no conteúdo, índice na raiz</p></div></li>
+    <li><span class="n">4</span><div><b>Moldes</b><p>um por artefato repetido</p></div></li>
+    <li><span class="n">5</span><div><b>Scripts governados</b><p>aprovação e catálogo</p></div></li>
+    <li class="priority"><span class="n">6</span><div><b>Tracking</b><p>estado lido primeiro em toda sessão</p></div></li>
+  </ol>
+  <p class="bridge">Próximo: o mesmo desenho, agora num ciclo de software.</p>
   <aside class="notes">Nada aqui depende de RPG: troquem ameaça por relatório, vault por documentação e Escudo pelo produto de vocês, e a estrutura continua de pé. Mas não tentem implantar tudo de uma vez. O passo um é um arquivo de texto por repositório; o passo seis, um arquivo de estado de meia página. As primeiras skills úteis costumam ser duas ou três: a tarefa mais repetida, o artefato mais refeito, o comando mais esquecido. Este hub chegou ao tamanho atual por formalização incremental, uma repetição de cada vez, ao longo de meses de uso real. A ordem importa menos que começar versionado. O erro a evitar é catalogar tudo de uma vez antes de usar: formalizem a primeira repetição real, usem por uma semana e deixem o próprio uso decidir qual é a próxima skill a nascer. Transição: para provar a transferência, o próximo ato aplica este mesmo passo-a-passo a um projeto de desenvolvimento de software.</aside>
 </section>
 
 <!-- 22 -->
 <section class="ato6">
   <p class="kicker">Ato 6 · Aplicação</p>
-  <h2>E se fosse software? O mesmo desenho, outro domínio</h2>
-  <p class="sub">Exemplo fictício de referência: um produto web com app, API e documentação.</p>
-  <div class="grid g4 tight">
-    <div class="card"><b class="t">AGENTS.md orquestrador</b><p>Roteia cada pedido entre produtos e repos.</p></div>
-    <div class="card"><b class="t">Jira</b><p>Fonte do trabalho: épicos, histórias, board.</p></div>
-    <div class="card"><b class="t">Azure DevOps</b><p>Fonte do código: Repos e Pipelines.</p></div>
-    <div class="card"><b class="t">Repos app / api / docs</b><p>Skills canônicas junto de cada contexto.</p></div>
+  <div class="thesis">
+    <h2>E se fosse software? O mesmo desenho, outro domínio</h2>
+    <p class="lead">Exemplo fictício: produto web com app, API e docs. O orquestrador roteia; a skill decide; MCP/script executa; o humano aprova nos portões.</p>
   </div>
-  <h3 style="margin:.35em 0 .2em">MCPs úteis: a camada de conexão com as ferramentas</h3>
-  <div class="grid g4 tight">
-    <div class="card"><b class="t">Atlassian MCP</b><p>Jira e Confluence: issues, JQL, páginas.</p></div>
-    <div class="card"><b class="t">Azure DevOps MCP</b><p>Work items, repos, PRs, pipelines.</p></div>
-    <div class="card"><b class="t">Azure MCP</b><p>Recursos, logs e diagnóstico do ambiente.</p></div>
-    <div class="card"><b class="t">MCP de repo / arquivos</b><p>Git e Markdown: código, ADR, runbooks.</p></div>
+  <div class="role-strip">
+    <div class="role"><b>AGENTS.md</b><p>Roteia pedidos entre produtos e repos.</p></div>
+    <div class="role"><b>Jira</b><p>Fonte do trabalho: épicos, histórias, board.</p></div>
+    <div class="role"><b>Azure DevOps</b><p>Fonte do código: Repos e Pipelines.</p></div>
+    <div class="role"><b>app / api / docs</b><p>Skills canônicas junto de cada contexto.</p></div>
   </div>
-  <p>Papéis: o orquestrador roteia, a skill decide, script/API/MCP executa e o humano aprova nos portões.</p>
+  <p style="margin-top:.7em;font-size:.62em;color:var(--mut)">MCPs úteis: Atlassian · Azure DevOps · Azure · repo/arquivos — conexão padronizada, sem cada skill aprender a API proprietária.</p>
   <aside class="notes">Este ato é um modelo fictício de referência, não um caso medido como os anteriores. A ideia é testar a transferência: trocamos o domínio, mantemos a arquitetura. Reparem que cada sistema continua com um papel só. O Jira responde o que fazer e em que ordem; o Azure responde onde o código está e se ele passa; os repositórios guardam código, documentação e as skills de cada contexto. O orquestrador não substitui nenhum deles: ele recebe o pedido em linguagem natural e escolhe produto, repositório, skill e ferramenta. Quando uma dessas fontes não existe ou está ambígua, a skill para e pergunta, em vez de inventar estado. Os MCPs são a camada de conexão desse desenho: em vez de cada skill aprender a API proprietária do Jira ou do Azure, o servidor MCP expõe operações padronizadas, com credencial e escopo próprios. Na prática, separar leitura de escrita: consultar board e pipeline pode ser amplo; criar issue, comentar PR ou mover história exige escopo curto e, nos portões, aprovação humana. Nos próximos quatro slides, uma única demanda atravessa o ciclo inteiro. Transição: ela nasce no backlog.</aside>
 </section>
 
@@ -457,6 +645,7 @@ description: >-
 <section class="ato6">
   <p class="kicker">Ato 6 · Demanda no Jira</p>
   <h2>A demanda nasce estruturada: descoberta, épico e histórias</h2>
+  <p class="lead">A demanda-guia do ato: checkout com Pix. Sem PO a aprovar o recorte, nenhuma branch nasce.</p>
   <div class="flow">
     <div class="step"><b>Descoberta</b>problema, persona e evidências</div><div class="arr">→</div>
     <div class="step"><b>Épico no Jira</b>objetivo e recorte aprovados</div><div class="arr">→</div>
@@ -468,7 +657,6 @@ description: >-
     <div class="card"><b class="t"><code>jira-epico</code> · <code>jira-historia</code></b><p>Criam épico e histórias via Atlassian MCP: Como / Quero / Para, aceite Given-When-Then e Definition of Ready.</p></div>
     <div class="card"><b class="t"><code>doc-rfc</code></b><p>Registra alternativas e a decisão técnica no repo de documentação.</p></div>
   </div>
-  <p>Demanda-guia do ato: <b>checkout com Pix</b> (épico fictício). Portão: o PO aprova épico e histórias antes de qualquer código.</p>
   <aside class="notes">A demanda-guia é simples de propósito: permitir checkout com Pix num produto que hoje só aceita cartão. A skill de descoberta não escreve código nem cria sprint; ela separa problema, persona e evidência do que ainda é hipótese. Depois, as skills do Jira transformam isso em épico e histórias usando molde: valor para o usuário, critérios de aceite verificáveis e Definition of Ready. Se o aceite não é testável, a história não está pronta. A RFC entra quando há decisão técnica com alternativas, por exemplo provedor de pagamento e idempotência. O portão é do PO: sem aprovação do recorte, nenhuma branch nasce. Transição: história aprovada ainda não é sprint.</aside>
 </section>
 
@@ -476,6 +664,7 @@ description: >-
 <section class="ato6">
   <p class="kicker">Ato 6 · Scrum</p>
   <h2>Refinamento e planning: a sprint nasce do board, não de uma planilha</h2>
+  <p class="lead">História aprovada ainda não é sprint: a skill lê o Jira, propõe; o time confirma o objetivo.</p>
   <div class="flow">
     <div class="step"><b>Refinamento</b>quebrar, ligar dependências, expor riscos</div><div class="arr">→</div>
     <div class="step"><b>Planning</b>capacidade + objetivo + seleção</div><div class="arr">→</div>
@@ -487,7 +676,6 @@ description: >-
     <div class="card"><b class="t"><code>scrum-planning</code></b><p>Usa consultas JQL versionadas, executadas via Atlassian MCP, para montar a proposta de sprint.</p></div>
     <div class="card"><b class="t"><code>scrum-daily</code></b><p>Resume o board: bloqueados, parados há dias e risco para o objetivo.</p></div>
   </div>
-  <p>O Jira continua sendo a fonte do estado: a skill lê, resume e propõe. Portão: o time confirma o objetivo da sprint.</p>
   <aside class="notes">Scrum aqui não é cerimônia decorativa; é onde a cadeia encontra limite de capacidade e dependência real. No refinamento, a skill ajuda a quebrar a história do Pix no que é API, no que é app e no que é webhook, marcando dependências e riscos. Na planning, ela não decide sozinha: monta uma proposta a partir do board, da capacidade declarada pelo time e de consultas JQL que ficam versionadas como script. A daily é leitura de exceção, não status completo: o que bloqueou, o que parou e o que ameaça o objetivo. O ponto inegociável é não criar um segundo tracking em Markdown: o estado mora no Jira. Transição: sprint planejada, começa a execução.</aside>
 </section>
 
@@ -495,6 +683,7 @@ description: >-
 <section class="ato6">
   <p class="kicker">Ato 6 · Azure e PR</p>
   <h2>Execução no Azure: branch, pipeline e review com portões</h2>
+  <p class="lead">Sprint planejada: branch ligada à história, CI verde e revisor humano — a IA prepara a revisão, não faz merge.</p>
   <div class="flow">
     <div class="step"><b>Branch ligada à história</b>nome e work item do Jira</div><div class="arr">→</div>
     <div class="step"><b>Implementação</b>skills do repo app/api + testes</div><div class="arr">→</div>
@@ -507,7 +696,6 @@ description: >-
     <div class="card"><b class="t"><code>azure-pipeline</code></b><p>Diagnostica CI via Azure DevOps MCP e Azure MCP: separa falha de código, teste instável e ambiente.</p></div>
     <div class="card"><b class="t"><code>pr-revisar</code></b><p>Avalia o diff: correção, testes, segurança, convenções do AGENTS e risco.</p></div>
   </div>
-  <p>Portões: CI verde e revisor humano. A avaliação da IA prepara a revisão; ela não faz merge automático.</p>
   <aside class="notes">Na execução, a rastreabilidade é mecânica: a branch nasce ligada à história, o PR usa template e aponta de volta para o Jira. As skills de implementação são as do próprio repositório, porque a convenção de API não é a mesma do app. Quando a pipeline falha, a skill de diagnóstico lê o log e classifica a falha antes de alguém sair alterando código: erro real, teste instável ou ambiente. A avaliação de PR feita pela IA é uma pré-revisão estruturada, com risco e pontos de atenção para o revisor. Ela nunca aprova no lugar dele e nunca faz merge. Via MCP, a mesma cautela vale para as ações de escrita: comentar no PR ou atualizar o work item é operação registrada e reversível; aprovar e completar o PR continuam sendo cliques do revisor humano. Transição: merged não é o fim; falta entregar e aprender.</aside>
 </section>
 
@@ -515,6 +703,7 @@ description: >-
 <section class="ato6">
   <p class="kicker">Ato 6 · Entrega e aprendizado</p>
   <h2>Merge não é o fim: release, documentação, review e retro</h2>
+  <p class="lead">Merged ainda não fecha o ciclo: release, docs, review do PO e retro — atrito repetido vira formalização nova.</p>
   <div class="grid g4 tight">
     <div class="card"><b class="t"><code>release-notes</code></b><p>Notas da versão a partir dos PRs e histórias concluídas.</p></div>
     <div class="card"><b class="t"><code>doc-atualizar</code></b><p>README, referência da API, runbook e ADR atualizados com a entrega.</p></div>
@@ -527,19 +716,21 @@ description: >-
   <div class="flow">
     <div class="step"><b>PR + CI</b></div><div class="arr">→</div><div class="step"><b>Merge</b></div><div class="arr">→</div><div class="step"><b>Release + docs</b></div><div class="arr">→</div><div class="step"><b>Retro</b></div>
   </div>
-  <p>Atrito repetido vira história nova ou formalização nova: skill, molde ou script.</p>
+  <p class="bridge">Fecho: de pedir coisas à IA para operar um sistema com ela.</p>
   <aside class="notes">O fechamento do ciclo é onde muitos projetos vazam valor: o código entra, mas a documentação fica para trás e a release vira arqueologia de PR. Aqui, release notes nascem das histórias e dos PRs vinculados; a documentação é parte da definição de pronto, não um favor posterior. A review confere a entrega contra os critérios de aceite escritos lá no começo, fechando o fio com a descoberta. E a retro tem uma saída formal: se o mesmo atrito apareceu de novo, ele vira história de melhoria ou desce um degrau e vira skill, molde ou script. É o mesmo retorno composto dos casos de RPG, agora no ciclo Scrum. Transição: fecho da apresentação.</aside>
 </section>
 
 <!-- 27 -->
 <section class="center closing">
   <p class="kicker">Encerramento</p>
-  <h2 style="margin-top:1.1em">De "pedir coisas à IA" para operar um sistema com ela</h2>
+  <h2 style="margin-top:.9em">De "pedir coisas à IA" para operar um sistema com ela</h2>
+  <p class="lead" style="margin-left:auto;margin-right:auto;text-align:center">Instruções versionadas, ferramentas determinísticas, moldes, portões e memória — o domínio foi RPG; o método é transferível.</p>
   <h3 style="font-size:1.25em; margin-top:.7em">Perguntas?</h3>
   <aside class="notes">Fecho, um minuto. O que foi construído não é uma coleção de prompts: é uma infraestrutura de colaboração entre pessoa e IA, com instruções versionadas, ferramentas determinísticas, moldes, portões e memória. O conteúdo de RPG foi o domínio; o método é transferível para qualquer projeto longo. Se a pergunta for por onde começar, a resposta curta está na replicação e no ato final: instrução única, tracking e as skills das tarefas mais repetidas, aplicadas ao ciclo que a equipe já usa. Se for sobre escalar para equipe, a conversa é revisão em diff, porque tudo aqui é texto em git, revisável como código. Se sobrar tempo, a demonstração mais curta é abrir o AGENTS.md do hub e uma skill canônica lado a lado: os dois arquivos mostram o sistema inteiro em miniatura. Obrigado; se quiserem, abro os arquivos reais no editor.</aside>
 </section>
 
 </div></div>
+<button type="button" class="btn-restart" id="btn-restart" aria-label="Reiniciar a apresentação" title="Reiniciar apresentação"></button>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 <script>
@@ -549,10 +740,25 @@ description: >-
   const larguraEstreita = window.matchMedia('(max-width: 700px)').matches;
   Reveal.initialize({
     hash: true, slideNumber: 'c/t', controls: true, progress: true,
-    transition: 'slide', margin: 0.06,
-    width: larguraEstreita ? 400 : 1280, height: 800,
+    controlsLayout: 'edges',
+    controlsTutorial: false,
+    transition: 'slide', margin: 0.03,
+    width: larguraEstreita ? 400 : 1280, height: 920,
     scrollActivationWidth: 700,
     plugins: [ RevealNotes ]
+  }).then(() => {
+    const btn = document.getElementById('btn-restart');
+    const syncRestart = () => {
+      const last = Reveal.getTotalSlides() - 1;
+      btn?.classList.toggle('is-visible', Reveal.getIndices().h === last);
+    };
+    btn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      Reveal.slide(0);
+    });
+    Reveal.on('slidechanged', syncRestart);
+    syncRestart();
   });
 </script>
 </body>
