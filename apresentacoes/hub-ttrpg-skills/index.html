@@ -48,10 +48,8 @@
   .tl{ margin-bottom:.35em; } .tl li{ margin:.35em 0; }
   .closing .card{ padding:9px 14px; } .closing .num{ font-size:1.2em !important; } .closing h2{ font-size:1.15em; line-height:1.2; margin-bottom:.35em; }
   .btn-restart{
-    position:fixed; left:50%; bottom:28px; z-index:41;
-    transform:translateX(-50%);
     width:64px; height:64px; padding:0; margin:0;
-    display:none; align-items:center; justify-content:center;
+    display:flex; align-items:center; justify-content:center;
     border:none; border-radius:50%;
     background:rgba(13,17,23,.65);
     box-shadow:0 0 0 1.5px rgba(232,179,75,.45);
@@ -59,7 +57,6 @@
     opacity:.92;
     transition:opacity .15s ease, box-shadow .15s ease, background .15s ease;
   }
-  .btn-restart.is-visible{ display:flex; }
   .btn-restart::after{
     content:""; display:block; width:22px; height:22px;
     background-color:currentColor;
@@ -70,6 +67,18 @@
     opacity:1; outline:none;
     background:rgba(13,17,23,.85);
     box-shadow:0 0 0 2px var(--amber);
+  }
+  /* Desktop: botão fixo no rodapé da viewport (só no último slide) */
+  .btn-restart--fixed{
+    position:fixed; left:50%; bottom:28px; z-index:41;
+    transform:translateX(-50%);
+    display:none;
+  }
+  .btn-restart--fixed.is-visible{ display:flex; }
+  /* No slide: só para scroll/mobile (fluxo abaixo de Perguntas?) */
+  .btn-restart--flow{
+    display:none;
+    margin:1.6em auto 0.4em;
   }
   .ato6 h2{ font-size:1.28em; margin-bottom:.35em; }
   .ato6 .flow{ margin:.3em 0; } .ato6 .flow .step{ padding:8px 10px; }
@@ -222,8 +231,10 @@
     .reveal .controls button{ width:52px !important; height:52px !important; opacity:.92 !important; }
     .reveal .controls .navigate-left::after,
     .reveal .controls .navigate-right::after{ width:18px; height:18px; }
-    .btn-restart{ width:52px; height:52px; bottom:78px; }
+    .btn-restart{ width:52px; height:52px; }
     .btn-restart::after{ width:18px; height:18px; }
+    .btn-restart--fixed{ display:none !important; }
+    .btn-restart--flow{ display:flex; }
     .reveal .progress{ height:4px; }
     .reveal h1{ font-size:1.5em; line-height:1.12; }
     .reveal h2, .ato6 h2{ font-size:1.08em; line-height:1.2; }
@@ -726,11 +737,12 @@ description: >-
   <h2 style="margin-top:.9em">De "pedir coisas à IA" para operar um sistema com ela</h2>
   <p class="lead" style="margin-left:auto;margin-right:auto;text-align:center">Instruções versionadas, ferramentas determinísticas, moldes, portões e memória — o domínio foi RPG; o método é transferível.</p>
   <h3 style="font-size:1.25em; margin-top:.7em">Perguntas?</h3>
+  <button type="button" class="btn-restart btn-restart--flow" data-restart aria-label="Reiniciar a apresentação" title="Reiniciar apresentação"></button>
   <aside class="notes">Fecho, um minuto. O que foi construído não é uma coleção de prompts: é uma infraestrutura de colaboração entre pessoa e IA, com instruções versionadas, ferramentas determinísticas, moldes, portões e memória. O conteúdo de RPG foi o domínio; o método é transferível para qualquer projeto longo. Se a pergunta for por onde começar, a resposta curta está na replicação e no ato final: instrução única, tracking e as skills das tarefas mais repetidas, aplicadas ao ciclo que a equipe já usa. Se for sobre escalar para equipe, a conversa é revisão em diff, porque tudo aqui é texto em git, revisável como código. Se sobrar tempo, a demonstração mais curta é abrir o AGENTS.md do hub e uma skill canônica lado a lado: os dois arquivos mostram o sistema inteiro em miniatura. Obrigado; se quiserem, abro os arquivos reais no editor.</aside>
 </section>
 
 </div></div>
-<button type="button" class="btn-restart" id="btn-restart" aria-label="Reiniciar a apresentação" title="Reiniciar apresentação"></button>
+<button type="button" class="btn-restart btn-restart--fixed" id="btn-restart" data-restart aria-label="Reiniciar a apresentação" title="Reiniciar apresentação"></button>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 <script>
@@ -747,16 +759,45 @@ description: >-
     scrollActivationWidth: 700,
     plugins: [ RevealNotes ]
   }).then(() => {
-    const btn = document.getElementById('btn-restart');
-    const syncRestart = () => {
-      const last = Reveal.getTotalSlides() - 1;
-      btn?.classList.toggle('is-visible', Reveal.getIndices().h === last);
-    };
-    btn?.addEventListener('click', (e) => {
+    const fixed = document.getElementById('btn-restart');
+    const viewport = () =>
+      document.querySelector('.reveal-viewport') ||
+      document.querySelector('.reveal');
+    const restart = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      Reveal.slide(0);
+      // Em vista de rolagem (mobile) o Reveal guarda o scroll no sessionStorage
+      // e slide(0) por si pode não subir a página — forçamos o topo.
+      try {
+        sessionStorage.removeItem('reveal-scroll-top');
+        sessionStorage.removeItem('reveal-scroll-origin');
+      } catch (_) { /* ignore */ }
+      const first = Reveal.getSlides?.()[0];
+      if (first && Reveal.scroll?.isActive?.() && Reveal.scroll.scrollToSlide) {
+        Reveal.scroll.scrollToSlide(first);
+      } else {
+        Reveal.slide(0, 0);
+      }
+      const vp = viewport();
+      if (vp) vp.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      window.scrollTo(0, 0);
+      if (location.hash && location.hash !== '#/' && location.hash !== '#') {
+        history.replaceState(null, '', `${location.pathname}${location.search}#/`);
+      }
+      // Segundo tick: scroll view pode recalcular depois do slide()
+      requestAnimationFrame(() => {
+        const v = viewport();
+        if (v) v.scrollTop = 0;
+        window.scrollTo(0, 0);
+      });
+    };
+    document.querySelectorAll('[data-restart]').forEach((el) => {
+      el.addEventListener('click', restart, { capture: true });
     });
+    const syncRestart = () => {
+      const last = Reveal.getTotalSlides() - 1;
+      fixed?.classList.toggle('is-visible', Reveal.getIndices().h === last);
+    };
     Reveal.on('slidechanged', syncRestart);
     syncRestart();
   });
